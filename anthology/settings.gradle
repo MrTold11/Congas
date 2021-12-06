@@ -1,0 +1,4 @@
+rootProject.name = 'anthology'
+include 'arcades'
+include 'classics'
+

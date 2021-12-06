@@ -1,0 +1,14 @@
+/build/
+/.idea/
+/.gradle/
+/client_dir/
+
+# Project exclude paths
+/anthology/.gradle/
+/client/build/
+/client/build/classes/java/main/
+/core/build/
+/core/build/classes/java/main/
+/out/
+/server/build/
+/server/build/classes/java/main/
