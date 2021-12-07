@@ -10,7 +10,14 @@ repositories {
 }
 
 dependencies {
+    implementation files('lib/jansi-2.1.0.jar')
+    implementation 'org.jline:jline:3.21.0'
+    implementation 'org.jline:jline-terminal-jna:3.21.0'
+    implementation project(':core')
+}
 
+compileJava {
+    options.compilerArgs << "-XDignore.symbol.file=true"
 }
 
 test {
