@@ -2,9 +2,11 @@ package ru.congas;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jline.terminal.Size;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import ru.congas.input.InputThread;
+import ru.congas.output.RenderThread;
 
 /**
  * @author Mr_Told
@@ -14,8 +16,9 @@ public class CongasClient {
     public static Logger logger = null;
 
     public static InputThread input = null;
+    public static RenderThread renderer = null;
     public static Terminal terminal = null;
-    public static boolean run = true;
+    public static volatile boolean run = true;
     public static boolean debug = true;
 
     /**
@@ -29,7 +32,20 @@ public class CongasClient {
             Runtime.getRuntime().addShutdownHook(new Thread(CongasClient::close, "ShutdownHook"));
 
             terminal = TerminalBuilder.builder().jansi(true).build();
+            if (terminal == null) throw new RuntimeException("Failed to create terminal");
+            Size s = terminal.getSize();
+            if (s.getRows() <= 1 || s.getColumns() <= 1) {
+                logger.error("Too small terminal: " + s.getColumns() + "x" + s.getRows());
+                terminal.output().write("This terminal is not suitable for Congas. Sorry :(".getBytes());
+                Thread.sleep(7000);
+                close();
+                return;
+            }
+
             input = new InputThread();
+            renderer = new RenderThread();
+
+            renderer.start();
             input.start();
 
         } catch (Exception e) {
@@ -37,14 +53,15 @@ public class CongasClient {
                 System.err.println("Error during logger init");
                 e.printStackTrace();
             } else
-                logger.fatal("Failed to start Congas server", e);
+                logger.fatal("Failed to start Congas client", e);
         }
     }
 
     /**
-     * proper way to stop everything
+     * Proper way to stop everything
      */
     public static void close() {
+        if (!run) return;
         logger.info("Stopping CongasClient...");
 
         run = false;

@@ -1,0 +1,17 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Server" type="JarApplication">
+    <option name="JAR_PATH" value="$PROJECT_DIR$/out/artifacts/Congas_server_main_jar/Congas.server.main.jar" />
+    <option name="VM_PARAMETERS" value="-Xmx1G -Xms128M" />
+    <option name="WORKING_DIRECTORY" value="$ProjectFileDir$\server_dir" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <module name="Congas.server" />
+    <method v="2">
+      <option name="BuildArtifacts" enabled="true">
+        <artifact name="Congas.core.main:jar" />
+      </option>
+      <option name="BuildArtifacts" enabled="true">
+        <artifact name="Congas.server.main:jar" />
+      </option>
+    </method>
+  </configuration>
+</component>

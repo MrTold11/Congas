@@ -12,11 +12,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * Input handler thread. Waits for incoming key press (char input) and passes it to handlers.
  * @author Mr_Told
  */
 public class InputThread extends Thread {
 
-    final Logger logger;
+    final Logger logger = LogManager.getLogger(InputThread.class);
     final Terminal terminal;
     final NonBlockingReader reader;
     final Attributes attrs;
@@ -32,7 +33,7 @@ public class InputThread extends Thread {
      * Init Input thread
      */
     public InputThread() {
-        logger = LogManager.getLogger(InputThread.class);
+        super("Input");
         terminal = CongasClient.terminal;
 
         attrs = terminal.enterRawMode();
