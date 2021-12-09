@@ -6,6 +6,7 @@ import org.jline.terminal.Size;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import ru.congas.input.InputThread;
+import ru.congas.input.SystemHandler;
 import ru.congas.output.RenderThread;
 
 /**
@@ -13,7 +14,7 @@ import ru.congas.output.RenderThread;
  */
 public class CongasClient {
 
-    public static Logger logger = null;
+    private static Logger logger = null;
 
     public static InputThread input = null;
     public static RenderThread renderer = null;
@@ -45,9 +46,12 @@ public class CongasClient {
             input = new InputThread();
             renderer = new RenderThread();
 
+            input.addHandler(new SystemHandler());
+
+            //new TestInputOutput().launch();
+
             renderer.start();
             input.start();
-
         } catch (Exception e) {
             if (logger == null) {
                 System.err.println("Error during logger init");
