@@ -20,7 +20,7 @@ public class CongasClient {
     public static RenderThread renderer = null;
     public static Terminal terminal = null;
     public static volatile boolean run = true;
-    public static boolean debug = true;
+    public static volatile boolean debug = true;
 
     /**
      * Main void: launch logger, terminal, input, output, add shutdown hook
