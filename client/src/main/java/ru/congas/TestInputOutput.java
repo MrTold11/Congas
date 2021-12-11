@@ -14,7 +14,8 @@ public class TestInputOutput extends SimpleGame {
     int a = 0;
 
     public TestInputOutput() {
-        super("TestIO", false, false, 30, 10, 10);
+        super("TestIO", false, false, false,
+                true, 30, 10, 10);
     }
 
     @Override
@@ -25,7 +26,7 @@ public class TestInputOutput extends SimpleGame {
                 return true;
             case 'w':
                 a++;
-                needUpdate();
+                forceUpdate();
                 return true;
         }
         return false;

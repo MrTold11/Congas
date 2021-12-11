@@ -49,6 +49,7 @@ public class CongasClient {
             input.addHandler(new SystemHandler());
 
             //new TestInputOutput().launch();
+            new TestPictureOutput().launch();
 
             renderer.start();
             input.start();

@@ -13,4 +13,6 @@ public interface InputHandler {
      */
     boolean handle(int c);
 
+    String getHandlerName();
+
 }

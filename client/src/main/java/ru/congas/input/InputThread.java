@@ -75,14 +75,22 @@ public class InputThread extends Thread {
      * Handler management methods
      */
     public void setHandlers(LinkedList<InputHandler> handlers) {
+        if (CongasClient.debug) {
+            StringBuilder sb = new StringBuilder();
+            for (InputHandler ih : handlers)
+                sb.append(", ").append(ih.getHandlerName());
+            logger.info("Handler list updated: " + (handlers.size() == 0 ? "null" : sb.substring(2)));
+        }
         this.handlers = handlers;
     }
 
     public void addHandler(InputHandler handler) {
+        if (CongasClient.debug) logger.info("Handler registered: " + handler.getHandlerName());
         handlers.add(handler);
     }
 
     public void removeHandler(InputHandler handler) {
+        if (CongasClient.debug) logger.info("Handler unregistered: " + handler.getHandlerName());
         handlers.remove(handler);
     }
 

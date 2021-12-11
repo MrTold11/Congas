@@ -15,11 +15,12 @@ import java.io.OutputStream;
  */
 public class RenderThread extends Thread {
 
-    final static Ansi A_RST = Ansi.ansi().reset();
+    final static Ansi A_RST   = Ansi.ansi().reset();
+    final static Ansi A_ERASE = Ansi.ansi().eraseScreen();
 
     final Logger logger = LogManager.getLogger(RenderThread.class);
     final Terminal terminal;
-    OutputStream out;
+    final OutputStream out;
 
     private volatile Canvas canvas = null;
 
@@ -29,8 +30,13 @@ public class RenderThread extends Thread {
         super("Renderer");
         this.terminal = CongasClient.terminal;
         this.out = terminal.output();
+        width = terminal.getWidth();
+        height = terminal.getHeight();
     }
 
+    /**
+     * Thread main loop. Register terminal resize, call render, count fps
+     */
     public void run() {
         int nw, nh;         // new width and height
         int whc = 0;        // width-height time counter, used for check width and height every 500ms only
@@ -47,7 +53,7 @@ public class RenderThread extends Thread {
 
                 if (canvas.liveUpdate() || canvas.updateNeeded()) {
                     render();
-                    canvas.notNeedUpdate();
+                    canvas.forceUpdate(false);
                 }
 
                 loopTimer = System.currentTimeMillis() - loopTimer;
@@ -61,6 +67,10 @@ public class RenderThread extends Thread {
         }
     }
 
+    /**
+     * Render frame with properties from canvas
+     * @throws IOException if terminal print goes wrong
+     */
     private void render() throws IOException {
         if (canvas == null) {
             logger.error("Canvas is null on rendering!");
@@ -69,35 +79,49 @@ public class RenderThread extends Thread {
             return;
         }
 
+        if (canvas.resetMatrix()) canvas.resetMatrices();
         canvas.updateCanvas();
+
+        int outRealHeight = canvas.getMatrix().length * canvas.getMultiplexer();
+        int outRealWidth  = canvas.getMatrix()[0].length * canvas.getMultiplexer();
+        StringBuilder sb = new StringBuilder(outRealHeight * outRealWidth + height - outRealHeight + width - outRealWidth);
+        StringBuilder lineSb = new StringBuilder(outRealWidth + 1);
 
         Ansi prevC = null;
         char c;
-        StringBuilder sb = new StringBuilder();
         for (int line = 0; line < canvas.getMatrix().length; line++) {
-            for (int lc = 0; lc < canvas.getMultiplexer(); lc++) {
-                for (int ch = 0; ch < canvas.getMatrix()[0].length; ch++) {
-                    if (prevC != canvas.getColors()[line][ch]) {
-                        prevC = canvas.getColors()[line][ch];
-                        sb.append(prevC == null ? A_RST.toString() : prevC.toString());
-                    }
-
-                    c = canvas.getMatrix()[line][ch];
-                    if (c == Character.MIN_VALUE) c = ' ';
-                    for (int mc = 0; mc < canvas.getMultiplexer(); mc++)
-                        sb.append(c);
+            lineSb.setLength(0);
+            for (int ch = 0; ch < canvas.getMatrix()[0].length; ch++) {
+                if (prevC != canvas.getColors()[line][ch]) {
+                    prevC = canvas.getColors()[line][ch];
+                    lineSb.append(prevC == null ? A_RST.toString() : prevC.toString());
                 }
-                sb.append("\n");
+
+                c = canvas.getMatrix()[line][ch];
+                if (c == Character.MIN_VALUE) c = ' ';
+
+                for (int mc = 0; mc < canvas.getMultiplexer(); mc++)
+                    lineSb.append(c);
+
             }
+            lineSb.append('\n');
+            for (int mc = 0; mc < canvas.getMultiplexer(); mc++)
+                sb.append(lineSb);
         }
 
         sb.append(A_RST.toString());
-        for (int i = 0; i < (height - canvas.getMatrix().length * canvas.getMultiplexer()); i++)
-            sb.append("\n");
+        for (int i = 0; i < (height - outRealHeight); i++)
+            sb.append('\n');
 
+        if (canvas.eraseScreen()) out.write(A_ERASE.toString().getBytes());
         out.write(sb.toString().getBytes());
     }
 
+    /**
+     * Called when terminal resize detected
+     * @param w new width
+     * @param h new height
+     */
     private void resize(int w, int h) {
         if (CongasClient.debug) logger.info("Terminal resized from " + width + "x" + height + " to " + w + "x" + h);
         width = w;
@@ -106,8 +130,12 @@ public class RenderThread extends Thread {
             canvas.updateTerminal(w, h);
     }
 
+    /**
+     * Set canvas to render
+     * @param c canvas
+     */
     public void setCanvas(Canvas c) {
-        if (CongasClient.debug) logger.info("Canvas set to " + c.getClass().getName());
+        if (CongasClient.debug) logger.info("Canvas set to " + c.getName());
         this.canvas = c;
         canvas.updateTerminal(width, height);
     }

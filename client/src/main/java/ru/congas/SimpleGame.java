@@ -8,11 +8,9 @@ import ru.congas.output.Canvas;
  */
 public abstract class SimpleGame extends Canvas implements InputHandler {
 
-    private final String name;
-
-    public SimpleGame(String name, boolean enableMultiplexer, boolean liveUpdate, int fps, int matrix_w, int matrix_h) {
-        super(name, enableMultiplexer, liveUpdate, fps, matrix_w, matrix_h);
-        this.name = name;
+    public SimpleGame(String name, boolean enableMultiplexer, boolean eraseScreen,
+                      boolean resetMatrix, boolean liveUpdate, int fps, int matrix_w, int matrix_h) {
+        super(name, enableMultiplexer, eraseScreen, resetMatrix, liveUpdate, fps, matrix_w, matrix_h);
     }
 
     public void launch() {
@@ -20,8 +18,12 @@ public abstract class SimpleGame extends Canvas implements InputHandler {
         CongasClient.input.addHandler(this);
     }
 
-    public String getName() {
-        return name;
+    public String getHandlerName() {
+        return getName() + "_handler";
+    }
+
+    public void exit() {
+        CongasClient.input.removeHandler(this);
     }
 
 }

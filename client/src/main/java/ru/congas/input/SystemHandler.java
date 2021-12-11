@@ -16,4 +16,9 @@ public class SystemHandler implements InputHandler {
         return false;
     }
 
+    @Override
+    public String getHandlerName() {
+        return "SystemHandler";
+    }
+
 }
