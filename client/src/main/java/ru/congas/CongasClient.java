@@ -7,7 +7,10 @@ import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import ru.congas.input.InputThread;
 import ru.congas.input.SystemHandler;
+import ru.congas.loader.AnthologyLoader;
 import ru.congas.output.RenderThread;
+
+import java.io.File;
 
 /**
  * @author Mr_Told
@@ -49,7 +52,18 @@ public class CongasClient {
             input.addHandler(new SystemHandler());
 
             //new TestInputOutput().launch();
-            new TestPictureOutput().launch();
+            //new TestPictureOutput().launch();
+            AnthologyLoader loader = new AnthologyLoader(new File("games/anthology.arcades.main.jar"), "Arcades");
+            Class<? extends SimpleGame> cs = loader.getGameClass("1");
+            if (cs == null) {
+                loader = new AnthologyLoader(new File("games/anthology.classics.main.jar"), "Classics");
+                cs = loader.getGameClass("1");
+            }
+
+            if (cs != null)
+                cs.getDeclaredConstructor().newInstance().launch();
+            else
+                logger.error("No games found...");
 
             renderer.start();
             input.start();
