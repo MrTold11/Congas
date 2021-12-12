@@ -1,18 +1,16 @@
 package ru.congas.anthology;
 
 import org.fusesource.jansi.Ansi;
-import ru.congas.CongasClient;
-import ru.congas.SimpleGame;
-import ru.congas.input.Keycode;
-
-import javax.swing.JFrame;
-import java.awt.*;
+        import ru.congas.CongasClient;
+        import ru.congas.SimpleGame;
+        import ru.congas.input.Keycode;
+        import java.awt.*;
 import java.util.Random;
 
 /**
  * @author DemonTerra
  */
-public class Arcades extends SimpleGame {
+public class Pacman extends SimpleGame {
 
     final Ansi star = Ansi.ansi().bgCyan();
     final Ansi Ghost = Ansi.ansi().bgRed();
@@ -29,14 +27,13 @@ public class Arcades extends SimpleGame {
     private int N_GHOSTS = 1;
     private int lives, score;
     private int[] dx, dy;
-    private int ghost_x, ghost_y;
-    private int ghost_dx, ghost_dy;
+    private int[] ghost_x, ghost_y;
+    private int[] ghost_dx, ghost_dy;
 
     private Image heart, ghost;
     private int Pos_x, Pos_y;
 
     private int pacman_x, pacman_y;
-    private int pacmand_x, pacmand_y;
     private int req_dx, req_dy;
     private short[] screenData;
     char temp;
@@ -63,9 +60,9 @@ public class Arcades extends SimpleGame {
     };
 
 
-    public Arcades() {
+    public Pacman() {
         super("TestIO", false, false, true,
-                true, 60, 30, 30);
+                true, 5, 30, 30);
         screenData = new short[N_BLOCKS * N_BLOCKS];
         Pos_x = 0;
         Pos_y = 0;
@@ -81,8 +78,8 @@ public class Arcades extends SimpleGame {
         }
         //ghost_x[1] = 5;
         //ghost_y[1] = 5;
-        ghost_y = 6;
-        ghost_x = 6;
+        ghost_y[0] = 6;
+        ghost_x[0] = 6;
         moveGhosts(0);
     }
 
@@ -140,20 +137,6 @@ public class Arcades extends SimpleGame {
                 else if (levelData[i] != -1) {
                     getMatrix()[x][y] = '*';
                 }
-                /*if (x == 1){
-                    getMatrix()[y][x] = '|';
-                }
-                else if (x == 15){
-                    getMatrix()[y][x+1] = '|';
-                }
-                if (y == 1){
-                    getMatrix()[y][x] = '-';
-                }
-                else if (y == 15){
-                    getMatrix()[y+1][x] = '-';
-                }*/
-                String X = String.valueOf(x);
-                String Y = String.valueOf(y);
                 i++;
             }
         }
@@ -221,22 +204,22 @@ public class Arcades extends SimpleGame {
         int count;
 
         //int n  = 1+(int)(Math.random()*(4-1+1));
-        int n = 4;
+        int n = new Random().nextInt(3)+1;
         /*if (n == 1){
-            ghost_dy[i] = -1;
-            ghost_dx[i] = 0;
+            ghost_dy[i][i] = -1;
+            ghost_dx[i][i] = 0;
         }*/
         if(n == 2){
-            ghost_dy = 0;
-            ghost_dx = -1;
+            ghost_dy[i] = 0;
+            ghost_dx[i] = -1;
         }
         /*else if (n == 3){
-            ghost_dy[i] = 1;
-            ghost_dx[i] = 0;
+            ghost_dy[i][i] = 1;
+            ghost_dx[i][i] = 0;
         }*/
         else if(n == 4){
-            ghost_dy = 0;
-            ghost_dx = 1;
+            ghost_dy[i] = 0;
+            ghost_dx[i] = 1;
         }
 
 
@@ -244,27 +227,28 @@ public class Arcades extends SimpleGame {
 
     private void drawGhost() {
         for (int i = 0; i < N_GHOSTS; i++) {
-            if (N_BLOCKS >= ghost_x+ ghost_dx && ghost_x + ghost_dx >=1){
+            if (N_BLOCKS >= pacman_x+ ghost_dx[i] && pacman_x + ghost_dx[i] >=1){
                 int x, y;
                 int j = 0;
 
                 for (x = 1; x <= 15; x += 1) {
                     for (y = 1; y <= 15; y += 1) {
-                        if ((ghost_x + ghost_dx == x )&&(ghost_y+ ghost_dy == y)&&(levelData[i] == 0)){
+                        if ((pacman_x + ghost_dx[i] == x )&&(pacman_y+ ghost_dy[i] == y)&&(levelData[j] == 0)) {
+
+                            getColors()[20][20] = Ghost;
                             moveGhosts(i);
                         }
                         j++;
                     }
                 }
-                ghost_x = ghost_x + ghost_dx;
+                pacman_x = pacman_x + Pos_x;
             }
+            getColors()[pacman_x][pacman_y] = Ghost;
 
-            getColors()[ghost_x][ghost_y] = Ghost;
-            if (pacman_x == ghost_x &&pacman_y ==ghost_y && inGame) {
+            /*if (pacman_x == ghost_x &&pacman_y ==ghost_y && inGame) {
                 dying = true;
-            }
+            }*/
         }
-
     }
 
     private void death() {
