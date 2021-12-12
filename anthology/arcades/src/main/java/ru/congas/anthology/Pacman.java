@@ -71,16 +71,24 @@ public class Pacman extends SimpleGame {
         //levelData[10] = -1;
 
         temp = '^';
+        ghost_x = new int[N_GHOSTS];
+        ghost_y = new int[N_GHOSTS];
+
+        ghost_dx = new int[N_GHOSTS];
+        ghost_dy = new int[N_GHOSTS];
         for (int i = 0; i < N_GHOSTS; i++){
-            //ghost_x[i] = 5;
-            //ghost_y[i] = 5;
+            ghost_x[i] = 5;
+            ghost_y[i] = 5;
+            ghost_dy[i] = 1;
             //moveGhosts(i);
         }
+        inGame = true;
+        lives = 3;
         //ghost_x[1] = 5;
         //ghost_y[1] = 5;
-        ghost_y[0] = 6;
-        ghost_x[0] = 6;
-        moveGhosts(0);
+        //ghost_y[0] = 6;
+        //ghost_x[0] = 6;
+        //moveGhosts(0);
     }
 
     @Override
@@ -118,7 +126,7 @@ public class Pacman extends SimpleGame {
         drawMaze();
         movePacman();
         drawPacman();
-        //drawGhost();
+        drawGhost();
     }
 
     public void drawMaze() {
@@ -203,20 +211,19 @@ public class Pacman extends SimpleGame {
         int pos;
         int count;
 
-        //int n  = 1+(int)(Math.random()*(4-1+1));
         int n = new Random().nextInt(3)+1;
-        /*if (n == 1){
-            ghost_dy[i][i] = -1;
-            ghost_dx[i][i] = 0;
-        }*/
+        if (n == 1){
+            ghost_dy[i] = -1;
+            ghost_dx[i] = 0;
+        }
         if(n == 2){
             ghost_dy[i] = 0;
             ghost_dx[i] = -1;
         }
-        /*else if (n == 3){
-            ghost_dy[i][i] = 1;
-            ghost_dx[i][i] = 0;
-        }*/
+        else if (n == 3){
+            ghost_dy[i] = 1;
+            ghost_dx[i] = 0;
+        }
         else if(n == 4){
             ghost_dy[i] = 0;
             ghost_dx[i] = 1;
@@ -227,28 +234,46 @@ public class Pacman extends SimpleGame {
 
     private void drawGhost() {
         for (int i = 0; i < N_GHOSTS; i++) {
-            if (N_BLOCKS >= + ghost_dx[i] && pacman_x + ghost_dx[i] >=1){
+            if (N_BLOCKS >= ghost_x[i] + ghost_dx[i] && ghost_x[i] + ghost_dx[i] >=1){
                 int x, y;
                 int j = 0;
 
                 for (x = 1; x <= 15; x += 1) {
                     for (y = 1; y <= 15; y += 1) {
-                        if ((pacman_x + ghost_dx[i] == x )&&(pacman_y+ ghost_dy[i] == y)&&(levelData[j] == 0)) {
-
-                            getColors()[20][20] = Ghost;
-                            moveGhosts(i);
+                        if ((ghost_x[i] + ghost_dx[i] == x )&&(ghost_y[i]+ ghost_dy[i] == y)&&(levelData[j] == 0)) {
+                            ghost_dy[i] = ghost_dy[i] * (-1);
+                            ghost_dx[i] = ghost_dy[i] * (-1);
+                            //moveGhosts(i);
                         }
                         j++;
                     }
                 }
-                pacman_x = pacman_x + Pos_x;
+                ghost_x[i] = ghost_x[i] + ghost_dx[i];
             }
-            getColors()[pacman_x][pacman_y] = Ghost;
+            if (N_BLOCKS >= ghost_y[i]+ ghost_dy[i] && ghost_y[i] + ghost_dy[i] >=1){
+                int x, y;
+                int j = 0;
 
-            /*if (pacman_x == ghost_x &&pacman_y ==ghost_y && inGame) {
-                dying = true;
-            }*/
+                for (x = 1; x <= 15; x += 1) {
+                    for (y = 1; y <= 15; y += 1) {
+                        if ((ghost_x[i] + ghost_dx[i] == x )&&(ghost_y[i] + ghost_dy[i] == y)&&(levelData[j] == 0)) {
+                            ghost_dy[i] = ghost_dy[i] * (-1);
+                            ghost_dx[i] = ghost_dy[i] * (-1);
+                        }
+                        j++;
+                    }
+                }
+
+                ghost_y[i] = ghost_y[i] + ghost_dy[i];
+            }
+            getColors()[ghost_x[i]][ghost_y[i]] = Ghost;
+
+            if (pacman_x == ghost_x[i] &&pacman_y ==ghost_y[i] && inGame){
+                death();
+            }
         }
+
+
     }
 
     private void death() {
