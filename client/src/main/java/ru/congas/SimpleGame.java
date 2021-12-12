@@ -2,6 +2,7 @@ package ru.congas;
 
 import ru.congas.input.InputHandler;
 import ru.congas.output.Canvas;
+import ru.congas.pages.MainMenu;
 
 /**
  * @author Mr_Told
@@ -22,8 +23,14 @@ public abstract class SimpleGame extends Canvas implements InputHandler {
         return getName() + "_handler";
     }
 
-    public void exit() {
+    protected final void exit() {
         CongasClient.input.removeHandler(this);
+        new MainMenu().launch();
+    }
+
+    protected final void exit(SimpleGame page) {
+        CongasClient.input.removeHandler(this);
+        page.launch();
     }
 
 }
