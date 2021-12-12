@@ -22,7 +22,7 @@ public abstract class Canvas {
      * printed 4 times, and every line will be printed 4 times too (output is simply 4 times bigger)
      */
     private volatile int multiplexer = 1;
-    private boolean enableMultiplexer = true;
+    private boolean enableMultiplexer = false;
 
     private volatile boolean liveUpdate = false; //Update console on every frame
     private volatile boolean needUpdate = false; //Force console update
@@ -36,13 +36,13 @@ public abstract class Canvas {
     /**
      * The 'game field'. Should be as small as possible (otherwise it's part won't be visible)
      */
-    private volatile char[][] matrix;
+    private volatile char[][] matrix = null;
     private volatile Ansi[][] colors;
 
     /**
      * Main canvas constructor
      * @param name game name (for logger)
-     * @param enableMultiplexer enable multiplexer
+     * @param enableMultiplexer enable multiplexer (ignored)
      * @param eraseScreen erase screen on every frame render
      * @param resetMatrix reset matrices before it's update
      * @param liveUpdate update console output on every frame
@@ -55,7 +55,7 @@ public abstract class Canvas {
         logger = LogManager.getLogger("Canvas_" + name);
         this.name = name;
         initCanvas(matrix_w, matrix_h);
-        enableMultiplexer(enableMultiplexer);
+        //enableMultiplexer(enableMultiplexer);
         setLiveUpdate(liveUpdate);
         setFps(fps);
         setEraseScreen(eraseScreen);
@@ -70,6 +70,7 @@ public abstract class Canvas {
     protected void initCanvas(int w, int h) {
         if (w <= 0) w = 1;
         if (h <= 0) h = 1;
+        if (matrix != null && w == matrix[0].length && h == matrix.length) return;
         if (CongasClient.debug) logger.info("Canvas set to " + w + "x" + h);
         matrix = new char[h][w];
         colors = new Ansi[h][w];
@@ -95,6 +96,14 @@ public abstract class Canvas {
         return colors;
     }
 
+    public int getMatrixWidth() {
+        return matrix[0].length;
+    }
+
+    public int getMatrixHeight() {
+        return matrix.length;
+    }
+
     public final int getMultiplexer() {
         return multiplexer;
     }
@@ -109,6 +118,7 @@ public abstract class Canvas {
         terminalHeight = h;
         resized(w, h);
         resetMultiplexer();
+        forceUpdate();
     }
 
     /**
@@ -123,6 +133,10 @@ public abstract class Canvas {
         colors = new Ansi[l1][l2];
     }
 
+    /**
+     * @param enable enable multiplexer
+     * @deprecated as it looks bad overall and especially with text. Should not be used without strong need
+     */
     public final void enableMultiplexer(boolean enable) {
         enableMultiplexer = enable;
         resetMultiplexer();
@@ -137,6 +151,7 @@ public abstract class Canvas {
             multiplexer = Math.min(terminalHeight / matrix.length, terminalWidth / matrix[0].length);
         if (multiplexer <= 0) multiplexer = 1;
         if (CongasClient.debug) logger.info("Multiplexer set to " + multiplexer);
+        forceUpdate();
     }
 
     /**

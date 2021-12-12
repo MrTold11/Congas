@@ -53,21 +53,7 @@ public class CongasClient {
 
             //new TestInputOutput().launch();
             //new TestPictureOutput().launch();
-            AnthologyLoader loader;
-            Class<? extends SimpleGame> cs = null;
-            try {
-                loader = new AnthologyLoader(new File("games/anthology.arcades.main.jar"), "Arcades");
-                cs = loader.getGameClass("1");
-            } catch (Exception ignore) {}
-            if (cs == null) {
-                loader = new AnthologyLoader(new File("games/anthology.classics.main.jar"), "Classics");
-                cs = loader.getGameClass("1");
-            }
 
-            if (cs != null)
-                cs.getDeclaredConstructor().newInstance().launch();
-            else
-                logger.error("No games found...");
 
             renderer.start();
             input.start();
