@@ -1,6 +1,7 @@
 package ru.congas.anthology;
 
 import org.fusesource.jansi.Ansi;
+import ru.congas.CongasClient;
 import ru.congas.SimpleGame;
 import ru.congas.input.Keycode;
 
@@ -98,7 +99,7 @@ public class Tictac extends SimpleGame {
     public boolean handle(int c) {
         switch (c) {
             case Keycode.ESCAPE:
-                exit();
+                CongasClient.close();
                 return true;
             case 'r':
                 start();

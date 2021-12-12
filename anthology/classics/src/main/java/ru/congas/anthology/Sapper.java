@@ -120,7 +120,7 @@ public class Sapper extends SimpleGame {
     public boolean handle(int c) {
         switch (c) {
             case Keycode.ESCAPE:
-                exit();
+                CongasClient.close();
                 return true;
             case 'r':
                 start();
