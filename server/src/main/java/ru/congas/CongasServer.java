@@ -1,7 +1,10 @@
 package ru.congas;
 
+import com.sun.net.httpserver.HttpServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.net.InetSocketAddress;
 
 /**
  * @author Mr_Told
@@ -13,10 +16,15 @@ public class CongasServer {
     public static void main(String[] args) {
         try {
             logger = LogManager.getLogger(CongasServer.class);
-            Hello h = new Hello();
-            logger.info("Starting Congas server" + h.hello);
+            logger.info("Starting Congas server");
 
-            //Runtime.getRuntime().addShutdownHook(new Thread(world::stop));
+            HttpServer server = HttpServer.create(new InetSocketAddress(26642), 0);
+            server.createContext("/jar", new GetJarHandler());
+            server.createContext("/list", new GetListHandler());
+            server.setExecutor(null);
+            server.start();
+
+            //Runtime.getRuntime().addShutdownHook(new Thread(stop));
 
         } catch (Exception e) {
             if (logger == null) {

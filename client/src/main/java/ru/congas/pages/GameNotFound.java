@@ -26,7 +26,7 @@ public class GameNotFound extends SimpleGame {
     @Override
     public boolean handle(int c) {
         if (c == Keycode.SPACE || c == Keycode.ENTER) {
-            exit();
+            exit(new MainMenu());
             return true;
         }
         return false;
