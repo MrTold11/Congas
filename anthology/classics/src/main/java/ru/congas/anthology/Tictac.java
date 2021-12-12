@@ -21,11 +21,6 @@ public class Tictac extends SimpleGame {
                 false, 10, 4, 4);
     }
 
-    public int close() {
-        //возврат либо рестарт
-        return 0;
-    }
-
     public void launch() {
         start();
         super.launch();
@@ -70,6 +65,15 @@ public class Tictac extends SimpleGame {
                 if (getMatrix()[i][j] != ' ') line.append(getMatrix()[i][j]);
 
 
+            if (line.toString().equals("XXX")) return 1;
+            if (line.toString().equals("000")) return 2;
+            line.setLength(0);
+        }
+
+        for(int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++)
+                if (getMatrix()[j][i] != ' ') line.append(getMatrix()[j][i]);
+
 
             if(line.toString().equals("XXX")) return 1;
             if(line.toString().equals("000")) return 2;
@@ -94,7 +98,7 @@ public class Tictac extends SimpleGame {
     public boolean handle(int c) {
         switch (c) {
             case Keycode.ESCAPE:
-                close();
+                exit();
                 return true;
             case 'r':
                 start();

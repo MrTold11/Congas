@@ -1,6 +1,7 @@
 package ru.congas.anthology;
 
 import org.fusesource.jansi.Ansi;
+import ru.congas.CongasClient;
 import ru.congas.SimpleGame;
 import ru.congas.input.Keycode;
 
@@ -12,9 +13,9 @@ public class Sapper extends SimpleGame {
     final Ansi yellow = Ansi.ansi().bgYellow();
     final Ansi green = Ansi.ansi().bgBrightGreen();
     final Ansi red = Ansi.ansi().bgRed();
-    int boardW = 21;
-    int boardH = 21;
-    int numberMines;
+    int boardW = 22;
+    int boardH = 22;
+    int numberMines = 2;
     int[][] mines;
     boolean[][] flags;
     boolean[][] revealed;
@@ -65,23 +66,14 @@ public class Sapper extends SimpleGame {
         if(isUnavailable(x,y)) exit();
         revealed[x][y] = true;
         updateBoard();
-        if(minesNearby(x,y) != 0) exit();
+        if(minesNearby(x,y) != 0) CongasClient.close();
         boolean won = true;
-        for(int i = 1; i < 21; i++)
-            for(int j = 1; j < 21; j++)
-                if(!revealed[i][j] && mines[i][j] == 0) won = false;
-        if(won) exit();
-    }
-
-    private void clearBoard() {
-        for (int x = 1; x < boardW; x++) {
-            for (int y = 1; y < boardH; y++) {
-                mines[x][y] = 0;
-                getColors()[x][y] = star;
-            }
+        for(int i = 1; i < 21; i++) {
+            for (int j = 1; j < 21; j++)
+                if (!revealed[i][j] && mines[i][j] == 0) won = false;
+            break;
         }
-        updateBoard();
-        start();
+        if(won) exit();
     }
 
     private void switchPos(int x, int y) {
