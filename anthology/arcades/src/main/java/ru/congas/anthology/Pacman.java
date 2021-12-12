@@ -15,7 +15,7 @@ public class Pacman extends SimpleGame {
     final Ansi star = Ansi.ansi().bgCyan();
     final Ansi Ghost = Ansi.ansi().bgRed();
 
-    private boolean inGame;
+    private boolean inGame,win;
 
     private final int N_BLOCKS = 15;
 
@@ -76,6 +76,7 @@ public class Pacman extends SimpleGame {
         }
         inGame = true;
         lives = 3;
+        win = false;
     }
 
     @Override
@@ -110,15 +111,27 @@ public class Pacman extends SimpleGame {
 
     @Override
     public void updateCanvas() {
-        if (inGame) {
-            drawMaze();
-            movePacman();
-            drawPacman();
-            drawGhost();
+        if (!win){
+            if (inGame) {
+                drawMaze();
+                movePacman();
+                drawPacman();
+                drawGhost();
+            }
+            else{
+                exit();
+            }
         }
-        else{
-            exit();
+        else {
+            getMatrix()[5][5] = 'Y';
+            getMatrix()[5][6] = 'o';
+            getMatrix()[5][7] = 'u';
+            getMatrix()[5][9] = 'w';
+            getMatrix()[5][10] = 'i';
+            getMatrix()[5][11] = 'n';
+            getMatrix()[5][12] = '!';
         }
+
     }
 
     public void drawMaze() {
@@ -126,7 +139,10 @@ public class Pacman extends SimpleGame {
         int x, y;
         int i = 0;
         if (levelData[pacman_y+(pacman_x-1)*15 -1]!= -1 ){
-            score += 10;
+            score += 1;
+            if (score == 194){
+                win = true;
+            }
             levelData[pacman_y+(pacman_x-1)*15-1] = -1;
         }
         for (x = 1; x <= 15; x += 1) {
