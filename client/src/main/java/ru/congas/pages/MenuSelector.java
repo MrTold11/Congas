@@ -34,8 +34,9 @@ public abstract class MenuSelector extends SimpleGame {
         valuesList = new TextView[values.length];
         for (int i = 0; i < values.length; i++) {
             valuesList[i] = new TextView(values[i], bg);
-            valuesList[i].setPos().setGravity(Gravity.centerTop).setAlignY(align++);
+            valuesList[i].setPos().setGravity(Gravity.centerTop).setAlignY(align += 2);
         }
+        valuesList[current].setColors(sel);
     }
 
     @Override
@@ -63,14 +64,14 @@ public abstract class MenuSelector extends SimpleGame {
     private void goUp() {
         if (current == 0) return;
         valuesList[current].setColors(bg);
-        current++;
+        current--;
         valuesList[current].setColors(sel);
     }
 
     private void goDown() {
         if (current == valuesList.length - 1) return;
         valuesList[current].setColors(bg);
-        current--;
+        current++;
         valuesList[current].setColors(sel);
     }
 
