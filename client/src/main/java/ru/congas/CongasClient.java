@@ -53,8 +53,12 @@ public class CongasClient {
 
             //new TestInputOutput().launch();
             //new TestPictureOutput().launch();
-            AnthologyLoader loader = new AnthologyLoader(new File("games/anthology.arcades.main.jar"), "Arcades");
-            Class<? extends SimpleGame> cs = loader.getGameClass("1");
+            AnthologyLoader loader;
+            Class<? extends SimpleGame> cs = null;
+            try {
+                loader = new AnthologyLoader(new File("games/anthology.arcades.main.jar"), "Arcades");
+                cs = loader.getGameClass("1");
+            } catch (Exception ignore) {}
             if (cs == null) {
                 loader = new AnthologyLoader(new File("games/anthology.classics.main.jar"), "Classics");
                 cs = loader.getGameClass("1");
