@@ -48,8 +48,11 @@ public class AnthologyLoader extends URLClassLoader {
                 // remove .class
                 String className = je.getName().substring(0, je.getName().length() - 6).replace('/', '.');
                 Class<?> gameClass = loadClass(className);
+                int li = className.lastIndexOf('.');
+                if (li != -1)
+                    className = className.substring(className.endsWith(".") ? li : li + 1);
 
-                if (!gameClass.isAssignableFrom(SimpleGame.class)) continue;
+                if (!gameClass.getSuperclass().equals(SimpleGame.class)) continue;
 
                 if (Arrays.stream(gameClass.getDeclaredConstructors()).anyMatch(dc -> dc.getParameterCount() == 0))
                     gamesMap.put(className, gameClass.asSubclass(SimpleGame.class));

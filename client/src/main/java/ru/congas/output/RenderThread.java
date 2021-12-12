@@ -47,7 +47,7 @@ public class RenderThread extends Thread {
 
                 if (whc > 500) {
                     nw = terminal.getWidth();
-                    nh = terminal.getHeight();
+                    nh = terminal.getHeight() - 1;
                     if (nw != width || nh != height) resize(nw, nh);
                 }
 

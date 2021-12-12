@@ -25,12 +25,13 @@ public abstract class MenuSelector extends SimpleGame {
             hintTv = new TextView("Use [w]/[s] keys for navigation. Use [Enter] or [Space] to open selected", Ansi.ansi().bgRgb(77, 83, 89));
             hintTv.setPos().setGravity(Gravity.leftTop);
         }
-        int align = hint ? 0 : 2;
+        int align = hint ? 2 : 0;
 
         titleTv = new TextView(title, Ansi.ansi().bgMagenta());
         titleTv.setPos().setGravity(Gravity.centerTop).setAlignY(align);
 
         align += 2;
+        valuesList = new TextView[values.length];
         for (int i = 0; i < values.length; i++) {
             valuesList[i] = new TextView(values[i], bg);
             valuesList[i].setPos().setGravity(Gravity.centerTop).setAlignY(align++);

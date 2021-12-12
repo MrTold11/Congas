@@ -28,8 +28,16 @@ public class StorageManager {
         File[] jars = dir.listFiles((d, name) -> new File(d, name).isFile() && name.endsWith(".jar"));
         if (jars == null || jars.length == 0) return;
 
-        for (File f : jars)
-            tryLoad(f, f.getName());
+        for (File f : jars) {
+            String name = f.getName().substring(0, f.getName().lastIndexOf('.'));
+            //int li = name.lastIndexOf('.');
+            //if (li != -1)
+            //    name = name.substring(name.endsWith(".") ? li : li + 1);
+            String[] nms = name.split("\\.");
+            name = nms.length == 1 ? nms[0] : nms[1];
+            name = Character.toUpperCase(name.charAt(0)) + name.substring(1);
+            tryLoad(f, name);
+        }
     }
 
     private void tryLoad(File f, String name) {
