@@ -227,7 +227,7 @@ public class Pacman extends SimpleGame {
 
     private void drawGhost() {
         for (int i = 0; i < N_GHOSTS; i++) {
-            if (N_BLOCKS >= pacman_x+ ghost_dx[i] && pacman_x + ghost_dx[i] >=1){
+            if (N_BLOCKS >= + ghost_dx[i] && pacman_x + ghost_dx[i] >=1){
                 int x, y;
                 int j = 0;
 
