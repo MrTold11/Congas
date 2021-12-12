@@ -8,7 +8,9 @@ import org.jline.terminal.TerminalBuilder;
 import ru.congas.input.InputThread;
 import ru.congas.input.SystemHandler;
 import ru.congas.loader.AnthologyLoader;
+import ru.congas.loader.StorageManager;
 import ru.congas.output.RenderThread;
+import ru.congas.pages.MainMenu;
 
 import java.io.File;
 
@@ -22,6 +24,7 @@ public class CongasClient {
     public static InputThread input = null;
     public static RenderThread renderer = null;
     public static Terminal terminal = null;
+    public static StorageManager storageManager = null;
     public static volatile boolean run = true;
     public static volatile boolean debug = true;
 
@@ -46,14 +49,16 @@ public class CongasClient {
                 return;
             }
 
+            storageManager = new StorageManager();
             input = new InputThread();
             renderer = new RenderThread();
 
+            storageManager.init(true);
             input.addHandler(new SystemHandler());
 
             //new TestInputOutput().launch();
             //new TestPictureOutput().launch();
-
+            new MainMenu().launch();
 
             renderer.start();
             input.start();

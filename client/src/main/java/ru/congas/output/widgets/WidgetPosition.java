@@ -41,13 +41,13 @@ public class WidgetPosition {
         int pos;
         switch (gravity) {
             case leftTop:
-            case left_center:
+            case leftCenter:
             case leftBottom:
                 pos = alignX;
                 break;
             case center:
-            case horizontal_centerTop:
-            case horizontal_centerBottom:
+            case centerTop:
+            case centerBottom:
                 pos = (total_width - widget_width) / 2;
                 break;
             default:
@@ -61,13 +61,13 @@ public class WidgetPosition {
         int pos;
         switch (gravity) {
             case leftTop:
-            case horizontal_centerTop:
+            case centerTop:
             case rightTop:
                 pos = alignY;
                 break;
-            case left_center:
+            case leftCenter:
             case center:
-            case right_center:
+            case rightCenter:
                 pos = (total_height - widget_height) / 2;
                 break;
             default:

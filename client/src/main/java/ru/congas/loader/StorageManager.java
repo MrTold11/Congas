@@ -20,6 +20,7 @@ public class StorageManager {
     public void init(boolean loadLocal) {
         if (loadLocal) loadJars(new File("games/"));
         //todo load global
+        logger.info("Loaded " + anthology.size() + " anthologies");
     }
 
     private void loadJars(File dir) {
@@ -34,10 +35,20 @@ public class StorageManager {
     private void tryLoad(File f, String name) {
         try {
             AnthologyLoader a = new AnthologyLoader(f, name);
-            anthology.put(name, a);
+            if (a.hasGames())
+                anthology.put(name, a);
+            else if (CongasClient.debug) logger.warn("Find anthology without games: " + name);
         } catch (IOException e) {
             if (CongasClient.debug) logger.warn("Couldn't load anthology jar: " + name, e);
         }
+    }
+
+    public String[] getLoadedAnthologies() {
+        return anthology.keySet().toArray(new String[0]);
+    }
+
+    public AnthologyLoader getLoader(String name) {
+        return anthology.get(name);
     }
 
 }

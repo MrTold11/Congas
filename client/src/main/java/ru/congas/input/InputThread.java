@@ -86,6 +86,7 @@ public class InputThread extends Thread {
 
     public void addHandler(InputHandler handler) {
         if (CongasClient.debug) logger.info("Handler registered: " + handler.getHandlerName());
+        if (handlers.contains(handler)) removeHandler(handler);
         handlers.add(handler);
     }
 

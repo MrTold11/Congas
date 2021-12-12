@@ -27,6 +27,12 @@ public class AnthologyLoader extends URLClassLoader {
     final String name;
     private final Map<String, Class<? extends SimpleGame>> gamesMap = new HashMap<>();
 
+    /**
+     * Load and store (in map) anthology's games
+     * @param file anthology jar file
+     * @param name anthology name
+     * @throws IOException if there are problems with jar file
+     */
     public AnthologyLoader(File file, String name) throws IOException {
         super(new URL[] {file.toURI().toURL()}, getSystemClassLoader());
         this.name = name;
@@ -58,6 +64,11 @@ public class AnthologyLoader extends URLClassLoader {
         }
     }
 
+    /**
+     * Create a new instance of a game
+     * @param name name of the game
+     * @return game instance extend SimpleGame
+     */
     public final SimpleGame getNewGameInstance(String name) {
         Class<? extends SimpleGame> gameClass = gamesMap.get(name);
         if (gameClass == null) {
@@ -79,6 +90,10 @@ public class AnthologyLoader extends URLClassLoader {
 
     public String getName() {
         return name;
+    }
+
+    public String[] getGames() {
+        return gamesMap.keySet().toArray(new String[0]);
     }
 
 }

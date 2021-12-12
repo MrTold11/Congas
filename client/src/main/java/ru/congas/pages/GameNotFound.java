@@ -20,7 +20,7 @@ public class GameNotFound extends SimpleGame {
         notFoundText = new TextView("Game " + gameName + " not found in anthology " + packageName, Ansi.ansi().bgRed());
         notFoundText.setPos().setGravity(Gravity.center);
         pressToContinue = new TextView("Press [Space] or [Enter] to continue", null);
-        pressToContinue.setPos().setGravity(Gravity.horizontal_centerBottom);
+        pressToContinue.setPos().setGravity(Gravity.centerBottom);
     }
 
     @Override
