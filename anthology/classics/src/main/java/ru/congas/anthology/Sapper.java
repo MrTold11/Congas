@@ -7,6 +7,9 @@ import ru.congas.input.Keycode;
 
 import java.util.Random;
 
+/**
+ * @author Jailflat
+ */
 public class Sapper extends SimpleGame {
 
     final Ansi star = Ansi.ansi().bgCyan();
