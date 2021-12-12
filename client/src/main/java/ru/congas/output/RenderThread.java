@@ -140,4 +140,8 @@ public class RenderThread extends Thread {
         canvas.updateTerminal(width, height);
     }
 
+    public Canvas getCanvas() {
+        return canvas;
+    }
+
 }
