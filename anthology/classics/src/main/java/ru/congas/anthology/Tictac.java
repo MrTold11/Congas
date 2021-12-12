@@ -1,71 +1,129 @@
 package ru.congas.anthology;
 
+import org.fusesource.jansi.Ansi;
+import ru.congas.SimpleGame;
+import ru.congas.input.Keycode;
+
+
 /**
  * @author Jailflat
  */
-public class Tictac {
+public class Tictac extends SimpleGame {
 
-    static String[][] lines = new String[3][3];
-    static int turn;
+    final Ansi star = Ansi.ansi().bgCyan();
+    final Ansi yellow = Ansi.ansi().bgYellow();
 
-    public static int close() {
-        //выиграл такой-то
+    int turn;
+    int pos_x, pos_y;
+
+    public Tictac() {
+        super("TicTacToe", true, false, false,
+                false, 10, 4, 4);
+    }
+
+    public int close() {
         //возврат либо рестарт
         return 0;
     }
 
-    public static void launch() {
+    public void launch() {
+        start();
+        super.launch();
+    }
+
+    private void switchPos(int x, int y) {
+        if(x != -1 && y != -1 && y != 3 && x != 3) {
+            getColors()[pos_x][pos_y] = star;
+            pos_x = x;
+            pos_y = y;
+            getColors()[pos_x][pos_y] = yellow;
+        }
+        forceUpdate();
+    }
+
+    private void start() {
         turn = 1;
         for(int i = 0; i < 3; i++)
-            for(int j = 0; j < 3; j++)
-                lines[i][j] = "";
-        //Выбор игроками символов
+            for(int j = 0; j < 3; j++) {
+                getMatrix()[i][j] = ' ';
+                getColors()[i][j] = star;
+            }
+        pos_x = 1;
+        pos_y = 1;
+        switchPos(pos_x, pos_y);
     }
 
-    private static int newTurn() {
+    private void newTurn() {
         if(turn != 10) {
-       /*
-        if(turn % 2 == 1) ход игрока 1 (Х)
-        else ход игрока 2 (О)
-
-       */
-            //прием символа
-            //запись символа
-            if (Tictac.checkGameState() != 0) return Tictac.close();
+            if (checkGameState() != 0) start();
             turn++;
-            Tictac.updateBoard();
-            return Tictac.newTurn();
+            forceUpdate();
         }
-        else return Tictac.close();
     }
 
-    private static void updateBoard() {
-        //вывод поля на экран
-    }
+    private int checkGameState() {
 
-    private static int checkGameState() {
-        String line = "";
+        StringBuilder line = new StringBuilder();
 
         for(int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++)
-                if (lines[i][j].equals("")) line += lines[i][j];
+                if (getMatrix()[i][j] != ' ') line.append(getMatrix()[i][j]);
 
-            if(line.equals("XXX")) return 1;
-            else if(line.equals("OOO")) return 2;
 
+
+            if(line.toString().equals("XXX")) return 1;
+            if(line.toString().equals("000")) return 2;
+            line.setLength(0);
         }
 
-        line = lines[1][1] + lines[2][2] + lines[3][3];
-        if(line.equals("XXX")) return 1;
-        else if(line.equals("OOO")) return 2;
+        line.setLength(0);
+        line.append(getMatrix()[0][0]).append(getMatrix()[1][1]).append(getMatrix()[2][2]);
+        if(line.toString().equals("XXX")) return 1;
+        else if(line.toString().equals("000")) return 2;
 
-        line = lines[3][1] + lines[2][2] + lines[1][3];
-        if(line.equals("XXX")) return 1;
-        else if(line.equals("OOO")) return 2;
+        line.setLength(0);
+        line.append(getMatrix()[2][0]).append(getMatrix()[1][1]).append(getMatrix()[0][2]);
+        if(line.toString().equals("XXX")) return 1;
+        else if(line.toString().equals("000")) return 2;
 
         return 0;
     }
 
 
+    @Override
+    public boolean handle(int c) {
+        switch (c) {
+            case Keycode.ESCAPE:
+                close();
+                return true;
+            case 'r':
+                start();
+                return true;
+            case 'a':
+                switchPos(pos_x, pos_y-1);
+                return true;
+            case 'w':
+                switchPos(pos_x-1, pos_y);
+                return true;
+            case 'd':
+                switchPos(pos_x, pos_y+1);
+                return true;
+            case 's':
+                switchPos(pos_x+1, pos_y);
+                return true;
+            case Keycode.ENTER:
+                if(getMatrix()[pos_x][pos_y] == ' ') {
+                    if(turn % 2 == 0) getMatrix()[pos_x][pos_y] = '0';
+                    else getMatrix()[pos_x][pos_y] = 'X';
+                    newTurn();
+                }
+                return true;
+        }
+        return false;
+    }
 
+    @Override
+    public void updateCanvas() {
+
+    }
 }

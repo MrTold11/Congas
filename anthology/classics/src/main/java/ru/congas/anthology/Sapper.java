@@ -6,10 +6,7 @@ import ru.congas.input.Keycode;
 
 import java.util.Random;
 
-/**
- * @author Jailflat
- */
-public class Classics extends SimpleGame {
+public class Sapper extends SimpleGame {
 
     final Ansi star = Ansi.ansi().bgCyan();
     final Ansi yellow = Ansi.ansi().bgYellow();
@@ -24,7 +21,7 @@ public class Classics extends SimpleGame {
     int pos_x;
     int pos_y;
 
-    public Classics() {
+    public Sapper() {
         super("Sapper", true, false, false,
                 false, 10, 22, 22);
     }
