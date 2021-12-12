@@ -13,6 +13,11 @@ public class TestInputOutput extends SimpleGame {
     final Ansi star = Ansi.ansi().bgCyan();
     int a = 0;
 
+    public TestInputOutput() {
+        super("TestIO", false, false, false,
+                true, 30, 10, 10);
+    }
+
     @Override
     public boolean handle(int c) {
         switch (c) {
@@ -21,16 +26,14 @@ public class TestInputOutput extends SimpleGame {
                 return true;
             case 'w':
                 a++;
-                renderer.needUpdate();
+                forceUpdate();
                 return true;
         }
         return false;
     }
 
-    @Override
-    protected void init() {
-        initCanvas(237, 66);
-        //renderer.enableMultiplexer(false);
+    public void resized(int w, int h) {
+        initCanvas(w, h);
     }
 
     @Override

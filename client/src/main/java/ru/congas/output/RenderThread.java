@@ -15,30 +15,28 @@ import java.io.OutputStream;
  */
 public class RenderThread extends Thread {
 
-    final static Ansi A_RST = Ansi.ansi().reset();
+    final static Ansi A_RST   = Ansi.ansi().reset();
+    final static Ansi A_ERASE = Ansi.ansi().eraseScreen();
 
     final Logger logger = LogManager.getLogger(RenderThread.class);
     final Terminal terminal;
-    OutputStream out;
+    final OutputStream out;
 
     private volatile Canvas canvas = null;
 
-    int fps = 30;
-    volatile int loopTime = 1000 / fps; //ms
-
-    private volatile boolean liveUpdate = false; //Update console on every frame
-    private volatile boolean needUpdate = false; //Force console update
-
     private int width, height;
-    private int multiplexer;
-    private boolean enableMultiplexer = true;
 
     public RenderThread() {
         super("Renderer");
         this.terminal = CongasClient.terminal;
         this.out = terminal.output();
+        width = terminal.getWidth();
+        height = terminal.getHeight();
     }
 
+    /**
+     * Thread main loop. Register terminal resize, call render, count fps
+     */
     public void run() {
         int nw, nh;         // new width and height
         int whc = 0;        // width-height time counter, used for check width and height every 500ms only
@@ -53,15 +51,15 @@ public class RenderThread extends Thread {
                     if (nw != width || nh != height) resize(nw, nh);
                 }
 
-                if (liveUpdate || needUpdate) {
+                if (canvas.liveUpdate() || canvas.updateNeeded()) {
                     render();
-                    needUpdate = false;
+                    canvas.forceUpdate(false);
                 }
 
                 loopTimer = System.currentTimeMillis() - loopTimer;
-                if (loopTimer < loopTime) //noinspection BusyWait
-                    sleep(loopTime - loopTimer);
-                whc += loopTime;
+                if (loopTimer < canvas.getLoopTime()) //noinspection BusyWait
+                    sleep(canvas.getLoopTime() - loopTimer);
+                whc += canvas.getLoopTime();
             }
         } catch (Exception e) {
             logger.fatal(e);
@@ -69,95 +67,77 @@ public class RenderThread extends Thread {
         }
     }
 
+    /**
+     * Render frame with properties from canvas
+     * @throws IOException if terminal print goes wrong
+     */
     private void render() throws IOException {
         if (canvas == null) {
-            logger.error("Canvas is null!");
+            logger.error("Canvas is null on rendering!");
             out.write((Ansi.ansi().bg(Ansi.Color.RED).toString() + "No canvas....." + Ansi.ansi().reset().toString()).getBytes());
-            liveUpdate = false;
             //todo go to main menu?
             return;
         }
 
+        if (canvas.resetMatrix()) canvas.resetMatrices();
         canvas.updateCanvas();
 
-        if (multiplexer <= 0) {
-            if (!enableMultiplexer) multiplexer = 1;
-            else multiplexer = Math.min(height / canvas.getMatrix().length, width / canvas.getMatrix()[0].length);
-            if (multiplexer <= 0) multiplexer = 1;
-            if (CongasClient.debug) logger.info("Multiplexer set to " + multiplexer);
-        }
+        int outRealHeight = canvas.getMatrix().length * canvas.getMultiplexer();
+        int outRealWidth  = canvas.getMatrix()[0].length * canvas.getMultiplexer();
+        StringBuilder sb = new StringBuilder(outRealHeight * outRealWidth + height - outRealHeight + width - outRealWidth);
+        StringBuilder lineSb = new StringBuilder(outRealWidth + 1);
 
         Ansi prevC = null;
         char c;
-        StringBuilder sb = new StringBuilder();
         for (int line = 0; line < canvas.getMatrix().length; line++) {
-            for (int lc = 0; lc < multiplexer; lc++) {
-                for (int ch = 0; ch < canvas.getMatrix()[0].length; ch++) {
-                    if (prevC != canvas.getColors()[line][ch]) {
-                        prevC = canvas.getColors()[line][ch];
-                        sb.append(prevC == null ? A_RST.toString() : prevC.toString());
-                    }
-
-                    c = canvas.getMatrix()[line][ch];
-                    if (c == Character.MIN_VALUE) c = ' ';
-                    for (int mc = 0; mc < multiplexer; mc++)
-                        sb.append(c);
+            lineSb.setLength(0);
+            for (int ch = 0; ch < canvas.getMatrix()[0].length; ch++) {
+                if (prevC != canvas.getColors()[line][ch]) {
+                    prevC = canvas.getColors()[line][ch];
+                    lineSb.append(prevC == null ? A_RST.toString() : prevC.toString());
                 }
-                sb.append("\n");
+
+                c = canvas.getMatrix()[line][ch];
+                if (c == Character.MIN_VALUE) c = ' ';
+
+                for (int mc = 0; mc < canvas.getMultiplexer(); mc++)
+                    lineSb.append(c);
+
             }
+            lineSb.append('\n');
+            for (int mc = 0; mc < canvas.getMultiplexer(); mc++)
+                sb.append(lineSb);
         }
 
         sb.append(A_RST.toString());
-        for (int i = 0; i < (height - canvas.getMatrix().length * multiplexer); i++)
-            sb.append("\n");
+        for (int i = 0; i < (height - outRealHeight); i++)
+            sb.append('\n');
 
+        if (canvas.eraseScreen()) out.write(A_ERASE.toString().getBytes());
         out.write(sb.toString().getBytes());
     }
 
+    /**
+     * Called when terminal resize detected
+     * @param w new width
+     * @param h new height
+     */
     private void resize(int w, int h) {
         if (CongasClient.debug) logger.info("Terminal resized from " + width + "x" + height + " to " + w + "x" + h);
         width = w;
         height = h;
-        needUpdate = true;
-        multiplexer = 0;
-        if (canvas != null) canvas.resized(w, h);
-    }
-
-    public void enableMultiplexer(boolean enable) {
-        enableMultiplexer = enable;
+        if (canvas != null)
+            canvas.updateTerminal(w, h);
     }
 
     /**
-     * If canvas update its matrix (not on 'resized' void), multiplexer should be updated
+     * Set canvas to render
+     * @param c canvas
      */
-    public void updateMultiplexer() {
-        multiplexer = 0;
-    }
-
     public void setCanvas(Canvas c) {
-        if (CongasClient.debug) logger.info("Canvas set to " + c.getClass().getName());
+        if (CongasClient.debug) logger.info("Canvas set to " + c.getName());
         this.canvas = c;
-        multiplexer = 0;
-    }
-
-    public void setFps(int fps) {
-        if (CongasClient.debug) logger.info("Fps set from " + this.fps + " to " + fps);
-        this.fps = fps;
-        if (fps == 0) loopTime = 0;
-        else loopTime = 1000 / fps;
-    }
-
-    public int getFps() {
-        return fps;
-    }
-
-    public void setLiveUpdate(boolean liveUpdate) {
-        if (CongasClient.debug) logger.info("Live update is " + (liveUpdate ? "on" : "off"));
-        this.liveUpdate = liveUpdate;
-    }
-
-    public void needUpdate() {
-        needUpdate = true;
+        canvas.updateTerminal(width, height);
     }
 
 }
