@@ -26,6 +26,7 @@ You can download latest client .jar file from [Releases](https://github.com/MrTo
 Running Congas server is similar with running a client, but additionally you have to open 26642 port in order to allow internet users connect to it.
 
 ## Long-term TODO
+* Handle arrow keys and F1-F12
 * Add localisation system and Russian language
 * Move artifacts build from Inteiij IDEA to Gradle
 * Add store with downloads and settings for console preferences
