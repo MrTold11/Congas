@@ -86,7 +86,6 @@ public class Sapper extends SimpleGame {
             pos_x = x;
             pos_y = y;
             getColors()[pos_x][pos_y] = yellow;
-            logger.info(pos_x);
         }
         forceUpdate();
     }
