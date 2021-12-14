@@ -1,7 +1,6 @@
 package ru.congas.pages;
 
 import org.fusesource.jansi.Ansi;
-import ru.congas.SimpleGame;
 import ru.congas.input.Keycode;
 import ru.congas.output.widgets.Gravity;
 import ru.congas.output.widgets.TextView;
@@ -9,7 +8,7 @@ import ru.congas.output.widgets.TextView;
 /**
  * @author Mr_Told
  */
-public abstract class MenuSelector extends SimpleGame {
+public abstract class AbstractValueSelector extends Page {
 
     TextView titleTv, hintTv = null;
     TextView[] valuesList;
@@ -18,9 +17,8 @@ public abstract class MenuSelector extends SimpleGame {
     Ansi bg = Ansi.ansi().bgYellow();
     Ansi sel = Ansi.ansi().bgCyan();
 
-    public MenuSelector(String name, String title, boolean hint, String... values) {
-        super(name, false, false,
-                true, false, 10, 10, 10);
+    public AbstractValueSelector(String name, String title, boolean hint, boolean temporary, String... values) {
+        super(name, temporary);
         if (hint) {
             hintTv = new TextView("Use [w]/[s] keys for navigation. Use [Enter] or [Space] to open selected", Ansi.ansi().bgRgb(77, 83, 89));
             hintTv.setPos().setGravity(Gravity.leftTop);

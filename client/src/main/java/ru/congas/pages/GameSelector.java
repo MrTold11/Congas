@@ -1,16 +1,16 @@
 package ru.congas.pages;
 
-import ru.congas.loader.AnthologyLoader;
+import ru.congas.loader.GameLoader;
 
 /**
  * @author Mr_Told
  */
-public class GameSelector extends MenuSelector {
+public class GameSelector extends AbstractValueSelector {
 
-    final AnthologyLoader loader;
+    final GameLoader loader;
 
-    public GameSelector(AnthologyLoader loader) {
-        super(loader.getName(), "Select game from " + loader.getName(), false, loader.getGames());
+    public GameSelector(GameLoader loader) {
+        super(loader.getName(), "Select game from " + loader.getName(), false, true, loader.getGames());
         this.loader = loader;
     }
 

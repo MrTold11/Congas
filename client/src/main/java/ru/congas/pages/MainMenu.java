@@ -3,10 +3,10 @@ package ru.congas.pages;
 /**
  * @author Mr_Told
  */
-public class MainMenu extends MenuSelector {
+public class MainMenu extends AbstractValueSelector {
 
     public MainMenu() {
-        super("MainMenu", "Congas Client", true, "Library", "Store", "Settings");
+        super("MainMenu", "Congas Client", true, false, "Library", "Store", "Settings");
     }
 
     @Override

@@ -1,7 +1,6 @@
 package ru.congas.pages;
 
 import org.fusesource.jansi.Ansi;
-import ru.congas.SimpleGame;
 import ru.congas.input.Keycode;
 import ru.congas.output.widgets.Gravity;
 import ru.congas.output.widgets.TextView;
@@ -10,7 +9,7 @@ import ru.congas.output.widgets.TextView;
  * Simple dialog with two possible answers and a hint at the bottom (optionally)
  * @author Mr_Told
  */
-public abstract class Dialog extends SimpleGame {
+public abstract class AbstractDialog extends Page {
 
     Ansi answerColor = Ansi.ansi().bgCyan();
     Ansi bg = Ansi.ansi().bgYellow();
@@ -20,9 +19,12 @@ public abstract class Dialog extends SimpleGame {
 
     TextView answer;
 
-    public Dialog(String optionA, String optionB, String bottom, String... lines) {
-        super("dialog", false, false,
-                true, false, 10, 20, 3 + lines.length);
+    public AbstractDialog(String optionA, String optionB, String bottom, boolean temporary, String... lines) {
+        super("Dialog_" +
+                (lines.length > 0
+                        ? lines[0].substring(0, Math.min(9, lines[0].length()))
+                        : "empty"),
+                temporary);
         optionAtv = new TextView(optionA, null);
         optionAtv.setPos().setGravity(Gravity.center).setAlignX(-2 - optionA.length() / 2).setAlignY(2);
         optionBtv = new TextView(optionB, null);

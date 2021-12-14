@@ -15,7 +15,9 @@ import java.util.Map;
 public class StorageManager {
 
     final Logger logger = LogManager.getLogger("Storage");
-    final Map<String, AnthologyLoader> anthology = new HashMap<>();
+    final static Map<String, GameLoader> anthology = new HashMap<>();
+    final static TestGames testGames = new TestGames();
+    final static String testGamesName = "TestGames";
 
     public void init(boolean loadLocal) {
         if (loadLocal) loadJars(new File("games/"));
@@ -43,20 +45,31 @@ public class StorageManager {
     private void tryLoad(File f, String name) {
         try {
             AnthologyLoader a = new AnthologyLoader(f, name);
-            if (a.hasGames())
-                anthology.put(name, a);
-            else if (CongasClient.debug) logger.warn("Find anthology without games: " + name);
+            if (a.hasGames()) {
+                if (!anthology.containsKey(name))
+                    anthology.put(name, a);
+                else logger.warn("Anthology already loaded: " + name);
+            }
+            else if (CongasClient.isDebug()) logger.warn("Find anthology without games: " + name);
         } catch (IOException e) {
-            if (CongasClient.debug) logger.warn("Couldn't load anthology jar: " + name, e);
+            if (CongasClient.isDebug()) logger.warn("Couldn't load anthology jar: " + name, e);
         }
     }
 
-    public String[] getLoadedAnthologies() {
+    public static String[] getLoadedAnthologies() {
+        if (CongasClient.isDebug()) {
+            if (!anthology.containsKey(testGamesName)) anthology.put(testGamesName, testGames);
+        } else
+            anthology.remove(testGamesName);
         return anthology.keySet().toArray(new String[0]);
     }
 
-    public AnthologyLoader getLoader(String name) {
+    public static GameLoader getLoader(String name) {
         return anthology.get(name);
+    }
+
+    public void close() {
+
     }
 
 }

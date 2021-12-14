@@ -42,7 +42,6 @@ public abstract class Canvas {
     /**
      * Main canvas constructor
      * @param name game name (for logger)
-     * @param enableMultiplexer enable multiplexer (ignored)
      * @param eraseScreen erase screen on every frame render
      * @param resetMatrix reset matrices before it's update
      * @param liveUpdate update console output on every frame
@@ -50,7 +49,7 @@ public abstract class Canvas {
      * @param matrix_w initial matrices width
      * @param matrix_h initial matrices height
      */
-    public Canvas(String name, boolean enableMultiplexer, boolean eraseScreen, boolean resetMatrix,
+    public Canvas(String name, boolean eraseScreen, boolean resetMatrix,
                   boolean liveUpdate, int fps, int matrix_w, int matrix_h) {
         logger = LogManager.getLogger("Canvas_" + name);
         this.name = name;
@@ -71,7 +70,7 @@ public abstract class Canvas {
         if (w <= 0) w = 1;
         if (h <= 0) h = 1;
         if (matrix != null && w == matrix[0].length && h == matrix.length) return;
-        if (CongasClient.debug) logger.info("Canvas set to " + w + "x" + h);
+        if (CongasClient.isDebug()) logger.info("Canvas set to " + w + "x" + h);
         matrix = new char[h][w];
         colors = new Ansi[h][w];
     }
@@ -150,7 +149,7 @@ public abstract class Canvas {
         if (enableMultiplexer)
             multiplexer = Math.min(terminalHeight / matrix.length, terminalWidth / matrix[0].length);
         if (multiplexer <= 0) multiplexer = 1;
-        if (CongasClient.debug) logger.info("Multiplexer set to " + multiplexer);
+        if (CongasClient.isDebug()) logger.info("Multiplexer set to " + multiplexer);
         forceUpdate();
     }
 
@@ -159,13 +158,13 @@ public abstract class Canvas {
      * @param fps frames per second
      */
     protected final void setFps(int fps) {
-        if (CongasClient.debug) logger.info("Fps set from " + getFps() + " to " + fps);
+        if (CongasClient.isDebug()) logger.info("Fps set from " + getFps() + " to " + fps);
         this.fps = fps;
         loopTime = fps <= 0 ? 0 : 1000 / fps;
     }
 
     protected void setLiveUpdate(boolean liveUpdate) {
-        if (CongasClient.debug) logger.info("Live update is " + (liveUpdate ? "on" : "off"));
+        if (CongasClient.isDebug()) logger.info("Live update is " + (liveUpdate ? "on" : "off"));
         this.liveUpdate = liveUpdate;
     }
 
@@ -178,12 +177,12 @@ public abstract class Canvas {
     }
 
     protected void setEraseScreen(boolean eraseScreen) {
-        if (CongasClient.debug) logger.info("Screen erase is " + (eraseScreen ? "on" : "off"));
+        if (CongasClient.isDebug()) logger.info("Screen erase is " + (eraseScreen ? "on" : "off"));
         this.eraseScreen = eraseScreen;
     }
 
     protected void setResetMatrix(boolean resetMatrix) {
-        if (CongasClient.debug) logger.info("Matrices reset is " + (resetMatrix ? "on" : "off"));
+        if (CongasClient.isDebug()) logger.info("Matrices reset is " + (resetMatrix ? "on" : "off"));
         this.resetMatrix = resetMatrix;
     }
 

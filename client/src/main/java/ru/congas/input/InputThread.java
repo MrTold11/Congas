@@ -32,9 +32,9 @@ public class InputThread extends Thread {
     /**
      * Init Input thread
      */
-    public InputThread() {
+    public InputThread(Terminal terminal) {
         super("Input");
-        terminal = CongasClient.terminal;
+        this.terminal = terminal;
 
         attrs = terminal.enterRawMode();
         reader = terminal.reader();
@@ -48,9 +48,9 @@ public class InputThread extends Thread {
     public void run() {
         try {
             int read;
-            while (CongasClient.run) {
+            while (CongasClient.isRunning()) {
                 read = reader.read();
-                if (CongasClient.debug)
+                if (CongasClient.isDebug())
                     logger.info("Pressed char: " + Keycode.getKeyName(read) + " (" + read + ")");
                 handle(read);
             }
@@ -75,7 +75,7 @@ public class InputThread extends Thread {
      * Handler management methods
      */
     public void setHandlers(LinkedList<InputHandler> handlers) {
-        if (CongasClient.debug) {
+        if (CongasClient.isDebug()) {
             StringBuilder sb = new StringBuilder();
             for (InputHandler ih : handlers)
                 sb.append(", ").append(ih.getHandlerName());
@@ -85,13 +85,13 @@ public class InputThread extends Thread {
     }
 
     public void addHandler(InputHandler handler) {
-        if (CongasClient.debug) logger.info("Handler registered: " + handler.getHandlerName());
+        if (CongasClient.isDebug()) logger.info("Handler registered: " + handler.getHandlerName());
         if (handlers.contains(handler)) removeHandler(handler);
         handlers.add(handler);
     }
 
     public void removeHandler(InputHandler handler) {
-        if (CongasClient.debug) logger.info("Handler unregistered: " + handler.getHandlerName());
+        if (CongasClient.isDebug()) logger.info("Handler unregistered: " + handler.getHandlerName());
         handlers.remove(handler);
     }
 

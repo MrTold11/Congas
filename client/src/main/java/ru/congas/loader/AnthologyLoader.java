@@ -21,7 +21,7 @@ import java.util.jar.JarFile;
 /**
  * @author Mr_Told
  */
-public class AnthologyLoader extends URLClassLoader {
+public class AnthologyLoader extends URLClassLoader implements GameLoader {
 
     final Logger logger = LogManager.getLogger("Loader");
     final String name;
@@ -75,7 +75,7 @@ public class AnthologyLoader extends URLClassLoader {
     public final SimpleGame getNewGameInstance(String name) {
         Class<? extends SimpleGame> gameClass = gamesMap.get(name);
         if (gameClass == null) {
-            if (CongasClient.debug) logger.warn("Game " + name + " not found in anthology " + getName());
+            if (CongasClient.isDebug()) logger.warn("Game " + name + " not found in anthology " + getName());
             return new GameNotFound(name, getName());
         }
 

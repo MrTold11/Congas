@@ -1,19 +1,19 @@
 package ru.congas.pages;
 
-import ru.congas.CongasClient;
+import ru.congas.loader.StorageManager;
 
 /**
  * @author Mr_Told
  */
-public class LibrarySelector extends MenuSelector {
+public class LibrarySelector extends AbstractValueSelector {
 
     public LibrarySelector() {
-        super("Library", "Anthologies library", true, CongasClient.storageManager.getLoadedAnthologies());
+        super("Library", "Anthologies library", true, false, StorageManager.getLoadedAnthologies());
     }
 
     @Override
     protected void selected(String value) {
-        exit(new GameSelector(CongasClient.storageManager.getLoader(value)));
+        exit(new GameSelector(StorageManager.getLoader(value)));
     }
 
 }

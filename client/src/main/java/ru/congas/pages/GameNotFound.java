@@ -1,7 +1,6 @@
 package ru.congas.pages;
 
 import org.fusesource.jansi.Ansi;
-import ru.congas.SimpleGame;
 import ru.congas.input.Keycode;
 import ru.congas.output.widgets.Gravity;
 import ru.congas.output.widgets.TextView;
@@ -10,13 +9,12 @@ import ru.congas.output.widgets.TextView;
  * Page appears if the game that should be in the anthology somehow isn't loaded
  * @author Mr_Told
  */
-public class GameNotFound extends SimpleGame {
+public class GameNotFound extends Page {
 
     TextView notFoundText, pressToContinue;
 
     public GameNotFound(String gameName, String packageName) {
-        super("Game not found", false, false,
-                true, false, 10, 10, 10);
+        super("Game not found", true);
         notFoundText = new TextView("Game " + gameName + " not found in anthology " + packageName, Ansi.ansi().bgRed());
         notFoundText.setPos().setGravity(Gravity.center);
         pressToContinue = new TextView("Press [Space] or [Enter] to continue", null);

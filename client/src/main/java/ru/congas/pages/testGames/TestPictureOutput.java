@@ -1,6 +1,7 @@
-package ru.congas;
+package ru.congas.pages.testGames;
 
 import org.fusesource.jansi.Ansi;
+import ru.congas.SimpleGame;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -19,8 +20,7 @@ public class TestPictureOutput extends SimpleGame {
     Ansi prev = null;
 
     public TestPictureOutput() {
-        super("TestPO", false, false, false,
-                true, 10, 10, 10);
+        super("TestPO", false, false, true, 10, 10, 10);
         image = new BufferedImage(144, 32, BufferedImage.TYPE_INT_RGB);
         Graphics g = image.getGraphics();
         g.setFont(new Font("Dialog", Font.PLAIN, 24));

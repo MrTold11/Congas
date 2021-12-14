@@ -25,10 +25,11 @@ public class RenderThread extends Thread {
     private volatile Canvas canvas = null;
 
     private int width, height;
+    private boolean running = false;
 
-    public RenderThread() {
+    public RenderThread(Terminal terminal) {
         super("Renderer");
-        this.terminal = CongasClient.terminal;
+        this.terminal = terminal;
         this.out = terminal.output();
         width = terminal.getWidth();
         height = terminal.getHeight();
@@ -38,11 +39,14 @@ public class RenderThread extends Thread {
      * Thread main loop. Register terminal resize, call render, count fps
      */
     public void run() {
+        if (running) return;
+        running = true;
+
         int nw, nh;         // new width and height
         int whc = 0;        // width-height time counter, used for check width and height every 500ms only
         try {
             long loopTimer; // timer for loop time (to keep target fps)
-            while (CongasClient.run) {
+            while (CongasClient.isRunning()) {
                 loopTimer = System.currentTimeMillis();
 
                 if (whc > 500) {
@@ -123,7 +127,7 @@ public class RenderThread extends Thread {
      * @param h new height
      */
     private void resize(int w, int h) {
-        if (CongasClient.debug) logger.info("Terminal resized from " + width + "x" + height + " to " + w + "x" + h);
+        if (CongasClient.isDebug()) logger.info("Terminal resized from " + width + "x" + height + " to " + w + "x" + h);
         width = w;
         height = h;
         if (canvas != null)
@@ -135,7 +139,7 @@ public class RenderThread extends Thread {
      * @param c canvas
      */
     public void setCanvas(Canvas c) {
-        if (CongasClient.debug) logger.info("Canvas set to " + c.getName());
+        if (CongasClient.isDebug()) logger.info("Canvas set to " + c.getName());
         this.canvas = c;
         canvas.updateTerminal(width, height);
     }
