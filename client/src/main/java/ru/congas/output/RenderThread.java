@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.fusesource.jansi.Ansi;
 import ru.congas.CongasClient;
+import ru.congas.pages.MainMenu;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -79,7 +80,7 @@ public class RenderThread extends Thread {
         if (canvas == null) {
             logger.error("Canvas is null on rendering!");
             out.write((Ansi.ansi().bg(Ansi.Color.RED).toString() + "No canvas....." + Ansi.ansi().reset().toString()).getBytes());
-            //todo go to main menu?
+            CongasClient.openPage(new MainMenu());
             return;
         }
 

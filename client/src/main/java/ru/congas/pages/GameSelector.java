@@ -6,7 +6,7 @@ import ru.congas.loader.GameLoader;
 /**
  * @author Mr_Told
  */
-public class GameSelector extends AbstractValueSelector {
+public final class GameSelector extends AbstractValueSelector {
 
     final GameLoader loader;
 

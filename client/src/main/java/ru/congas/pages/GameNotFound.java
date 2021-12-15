@@ -10,7 +10,7 @@ import ru.congas.output.widgets.TextView;
  * Page appears if the game that should be in the anthology somehow isn't loaded
  * @author Mr_Told
  */
-public class GameNotFound extends Page {
+public final class GameNotFound extends Page {
 
     TextView notFoundText, pressToContinue;
 

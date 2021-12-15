@@ -26,9 +26,9 @@ public abstract class AbstractDialog extends Page {
                         : "empty"),
                 temporary);
         optionAtv = new TextView(optionA, null);
-        optionAtv.setPos().setGravity(Gravity.center).setAlignX(-2 - optionA.length() / 2).setAlignY(2);
+        optionAtv.setPos().setGravity(Gravity.center).setOffsetX(-2 - optionA.length() / 2).setOffsetY(2);
         optionBtv = new TextView(optionB, null);
-        optionBtv.setPos().setGravity(Gravity.center).setAlignX(2 + optionA.length() / 2).setAlignY(2);
+        optionBtv.setPos().setGravity(Gravity.center).setOffsetX(2 + optionA.length() / 2).setOffsetY(2);
         answer = optionAtv;
         if (bottom != null && bottom.length() > 0) {
             bottomTv = new TextView(bottom, null);
@@ -37,7 +37,7 @@ public abstract class AbstractDialog extends Page {
         this.lines = new TextView[lines.length];
         for (int i = 0; i < lines.length; i++) {
             this.lines[i] = new TextView(lines[i], bg);
-            this.lines[i].setPos().setGravity(Gravity.center).setAlignY(i - lines.length + 1);
+            this.lines[i].setPos().setGravity(Gravity.center).setOffsetY(i - lines.length + 1);
         }
     }
 

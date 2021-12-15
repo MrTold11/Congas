@@ -6,7 +6,7 @@ import ru.congas.loader.StorageManager;
 /**
  * @author Mr_Told
  */
-public class LibrarySelector extends AbstractValueSelector {
+public final class LibrarySelector extends AbstractValueSelector {
 
     public LibrarySelector() {
         super("Library", "Anthologies library", true, false, StorageManager.getLoadedAnthologies());

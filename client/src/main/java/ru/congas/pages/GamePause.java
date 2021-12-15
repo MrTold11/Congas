@@ -5,7 +5,7 @@ import ru.congas.CongasClient;
 /**
  * @author Mr_Told
  */
-public class GamePause extends AbstractValueSelector {
+public final class GamePause extends AbstractValueSelector {
 
     public GamePause() {
         super("GamePause", "PAUSE", false, false, "Resume", "Settings", "Leave game");
@@ -18,7 +18,7 @@ public class GamePause extends AbstractValueSelector {
                 CongasClient.back();
                 break;
             case "Settings":
-                //todo settings
+                CongasClient.openPage(new SettingsPage());
                 break;
             case "Leave game":
                 CongasClient.openPage(new LibrarySelector());

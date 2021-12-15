@@ -11,6 +11,7 @@ import ru.congas.loader.StorageManager;
 import ru.congas.output.RenderThread;
 import ru.congas.pages.MainMenu;
 import ru.congas.pages.Page;
+import ru.congas.pages.SettingsPage;
 
 import java.util.Stack;
 
@@ -21,6 +22,7 @@ public class CongasClient {
 
     private static Logger logger = null;
 
+    private static CongasClient instance = null;
     protected static InputThread input = null;
     protected static RenderThread renderer = null;
     private static Terminal terminal = null;
@@ -32,11 +34,16 @@ public class CongasClient {
     private static final SystemHandler systemHandler = new SystemHandler();
     private static SimpleGame current = null;
 
+    public CongasClient() {
+        instance = this;
+    }
+
     /**
      * Main void: launch logger, terminal, input, output, add shutdown hook
      * @param args ignored
      */
     public static void main(String[] args) {
+        new CongasClient();
         try {
             logger = LogManager.getLogger(CongasClient.class);
             logger.info("Starting CongasClient");
@@ -91,13 +98,13 @@ public class CongasClient {
         if (debug) logger.info("Opening " + page.getName() + " page");
         if (current != null)
             CongasClient.input.removeHandler(current);
-        CongasClient.renderer.setCanvas(page);
         current = page;
-        systemHandler.setCurrent(page);
-        CongasClient.input.addHandler(page);
-        if (page instanceof Page && ((Page) page).isTemporary())
-            return;
-        pageStack.add(page);
+        systemHandler.setCurrent(current);
+        if (!(page instanceof Page && ((Page) page).isTemporary()))
+            pageStack.add(page);
+        if (page instanceof SettingsPage) ((SettingsPage) page).initClient(instance);
+        CongasClient.renderer.setCanvas(current);
+        CongasClient.input.addHandler(current);
     }
 
     public synchronized static void back() {
@@ -136,6 +143,11 @@ public class CongasClient {
 
     public static boolean isDebug() {
         return debug;
+    }
+
+    public void enableDebug(boolean enable) {
+        logger.info("Debug mode " + (enable ? "ON" : "OFF"));
+        debug = enable;
     }
 
 }

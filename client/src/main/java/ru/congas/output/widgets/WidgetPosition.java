@@ -5,7 +5,7 @@ package ru.congas.output.widgets;
  */
 public class WidgetPosition {
 
-    int alignX, alignY;
+    int offsetX, offsetY;
 
 
 
@@ -16,19 +16,19 @@ public class WidgetPosition {
         return this;
     }
 
-    public WidgetPosition setAlignX(int alignX) {
-        this.alignX = alignX;
+    public WidgetPosition setOffsetX(int offsetX) {
+        this.offsetX = offsetX;
         return this;
     }
 
-    public WidgetPosition setAlignY(int alignY) {
-        this.alignY = alignY;
+    public WidgetPosition setOffsetY(int offsetY) {
+        this.offsetY = offsetY;
         return this;
     }
 
     public WidgetPosition setAlign(int alignX, int alignY) {
-        this.alignX = alignX;
-        this.alignY = alignY;
+        this.offsetX = alignX;
+        this.offsetY = alignY;
         return this;
     }
 
@@ -43,7 +43,7 @@ public class WidgetPosition {
             case leftTop:
             case leftCenter:
             case leftBottom:
-                pos = alignX;
+                pos = offsetX;
                 break;
             case center:
             case centerTop:
@@ -63,7 +63,7 @@ public class WidgetPosition {
             case leftTop:
             case centerTop:
             case rightTop:
-                pos = alignY;
+                pos = offsetY;
                 break;
             case leftCenter:
             case center:

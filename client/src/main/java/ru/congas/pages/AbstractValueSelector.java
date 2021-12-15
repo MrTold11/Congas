@@ -19,20 +19,17 @@ public abstract class AbstractValueSelector extends Page {
 
     public AbstractValueSelector(String name, String title, boolean hint, boolean temporary, String... values) {
         super(name, temporary);
-        if (hint) {
-            hintTv = new TextView("Use [w]/[s] keys for navigation. Use [Enter] or [Space] to open selected", Ansi.ansi().bgRgb(77, 83, 89));
-            hintTv.setPos().setGravity(Gravity.leftTop);
-        }
+        if (hint) setHint("Use [w]/[s] keys for navigation. Use [Enter] or [Space] to open selected");
         int align = hint ? 2 : 0;
 
         titleTv = new TextView(title, Ansi.ansi().bgMagenta());
-        titleTv.setPos().setGravity(Gravity.centerTop).setAlignY(align);
+        titleTv.setPos().setGravity(Gravity.centerTop).setOffsetY(align);
 
         align += 2;
         valuesList = new TextView[values.length];
         for (int i = 0; i < values.length; i++) {
             valuesList[i] = new TextView(values[i], bg);
-            valuesList[i].setPos().setGravity(Gravity.centerTop).setAlignY(align += 2);
+            valuesList[i].setPos().setGravity(Gravity.centerTop).setOffsetY(align += 2);
         }
         valuesList[current].setColors(sel);
     }
@@ -83,6 +80,24 @@ public abstract class AbstractValueSelector extends Page {
         if (hintTv != null) hintTv.render(this);
         for (TextView tv : valuesList)
             tv.render(this);
+    }
+
+    protected void setHint(String text) {
+        if (hintTv == null) {
+            hintTv = new TextView(text, Ansi.ansi().bgRgb(77, 83, 89));
+            hintTv.setPos().setGravity(Gravity.leftTop);
+        } else hintTv.setText(text);
+    }
+
+    protected void updateValue(int index, String text) {
+        if (index < 0 || index >= valuesList.length) {
+            logger.warn(getName() + " trying to update value on non-existing index " + index
+                    + ". Value: " + (text == null ? "null" : text.substring(0, Math.min(16, text.length()))));
+            return;
+        }
+
+        if (text != null) valuesList[index].setText(text);
+        forceUpdate();
     }
 
     protected abstract void selected(String value);

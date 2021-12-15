@@ -5,7 +5,7 @@ import ru.congas.CongasClient;
 /**
  * @author Mr_Told
  */
-public class MainMenu extends AbstractValueSelector {
+public final class MainMenu extends AbstractValueSelector {
 
     public MainMenu() {
         super("MainMenu", "Congas Client", true, false, "Library", "Store", "Settings");
@@ -20,6 +20,7 @@ public class MainMenu extends AbstractValueSelector {
             case "Store":
                 break;
             case "Settings":
+                CongasClient.openPage(new SettingsPage());
                 break;
         }
     }
