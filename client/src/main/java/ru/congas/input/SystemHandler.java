@@ -2,6 +2,8 @@ package ru.congas.input;
 
 import ru.congas.CongasClient;
 import ru.congas.SimpleGame;
+import ru.congas.pages.GamePause;
+
 /**
  * @author Mr_Told
  */
@@ -14,15 +16,17 @@ public class SystemHandler implements InputHandler {
     public boolean handle(int c) {
         if (current == null) return false;
         if (c == Keycode.ESCAPE) {
-            if (System.currentTimeMillis() - escTime < 300) {
+            if (System.currentTimeMillis() - escTime < 250) {
                 if (current.overrideEscape()) CongasClient.back();
                 else CongasClient.close();
                 return true;
             }
             escTime = System.currentTimeMillis();
             if (current.overrideEscape()) return false;
-            //todo open pause if (current.isGame())
-            CongasClient.back();
+            if (current.isGame())
+                CongasClient.openPage(new GamePause());
+            else
+                CongasClient.back();
             return true;
         }
         return false;

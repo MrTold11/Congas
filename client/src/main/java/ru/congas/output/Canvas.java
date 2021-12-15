@@ -25,7 +25,7 @@ public abstract class Canvas {
     private boolean enableMultiplexer = false;
 
     private volatile boolean liveUpdate = false; //Update console on every frame
-    private volatile boolean needUpdate = false; //Force console update
+    private volatile boolean needUpdate = true; //Force console update
 
     //Frames per second. If zero, fps is not limited
     private int fps = 30;

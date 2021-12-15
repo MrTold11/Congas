@@ -1,5 +1,6 @@
 package ru.congas.pages;
 
+import ru.congas.CongasClient;
 import ru.congas.loader.GameLoader;
 
 /**
@@ -16,7 +17,7 @@ public class GameSelector extends AbstractValueSelector {
 
     @Override
     protected void selected(String value) {
-        exit(loader.getNewGameInstance(value));
+        CongasClient.openPage(loader.getNewGameInstance(value));
     }
 
 }

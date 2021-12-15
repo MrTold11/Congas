@@ -76,6 +76,11 @@ public class CongasClient {
     }
 
     public synchronized static void openPage(SimpleGame page) {
+        if (page == null) {
+            logger.warn("Trying to open null page!");
+            return;
+        }
+
         for (SimpleGame p : pageStack) {
             if (p.getName().equals(page.getName()) && p.getClass().equals(page.getClass())) {
                 while (pageStack.peek() != p) back();

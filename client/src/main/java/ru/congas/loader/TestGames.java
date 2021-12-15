@@ -1,6 +1,7 @@
 package ru.congas.loader;
 
 import ru.congas.SimpleGame;
+import ru.congas.pages.GameNotFound;
 import ru.congas.pages.testGames.TestInputOutput;
 import ru.congas.pages.testGames.TestPictureOutput;
 
@@ -18,7 +19,7 @@ public class TestGames implements GameLoader {
             case "TestPictureOutput":
                 return new TestPictureOutput();
         }
-        return null;
+        return new GameNotFound(name, getName());
     }
 
     @Override
@@ -28,6 +29,6 @@ public class TestGames implements GameLoader {
 
     @Override
     public String[] getGames() {
-        return new String[] {"TestInputOutput", "TestPictureOutput"};
+        return new String[] {"TestInputOutput", "TestPictureOutput", "TestNotFound"};
     }
 }

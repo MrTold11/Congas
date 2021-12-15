@@ -1,6 +1,7 @@
 package ru.congas.pages;
 
 import org.fusesource.jansi.Ansi;
+import ru.congas.CongasClient;
 import ru.congas.input.Keycode;
 import ru.congas.output.widgets.Gravity;
 import ru.congas.output.widgets.TextView;
@@ -24,7 +25,7 @@ public class GameNotFound extends Page {
     @Override
     public boolean handle(int c) {
         if (c == Keycode.SPACE || c == Keycode.ENTER) {
-            exit(new MainMenu());
+            CongasClient.back();
             return true;
         }
         return false;

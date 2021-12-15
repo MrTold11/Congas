@@ -1,5 +1,7 @@
 package ru.congas.pages;
 
+import ru.congas.CongasClient;
+
 /**
  * @author Mr_Told
  */
@@ -13,7 +15,7 @@ public class MainMenu extends AbstractValueSelector {
     protected void selected(String value) {
         switch (value) {
             case "Library":
-                exit(new LibrarySelector());
+                CongasClient.openPage(new LibrarySelector());
                 break;
             case "Store":
                 break;

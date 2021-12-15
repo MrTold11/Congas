@@ -56,8 +56,8 @@ public class RenderThread extends Thread {
                 }
 
                 if (canvas.liveUpdate() || canvas.updateNeeded()) {
-                    render();
                     canvas.forceUpdate(false);
+                    render();
                 }
 
                 loopTimer = System.currentTimeMillis() - loopTimer;
