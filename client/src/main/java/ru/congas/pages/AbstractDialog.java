@@ -12,7 +12,7 @@ import ru.congas.output.widgets.TextView;
 public abstract class AbstractDialog extends Page {
 
     Ansi answerColor = Ansi.ansi().bgCyan();
-    Ansi bg = Ansi.ansi().bgYellow();
+    Ansi bg = Ansi.ansi().bgRgb(205, 83, 52);
 
     TextView optionAtv, optionBtv, bottomTv = null;
     TextView[] lines;
@@ -30,6 +30,7 @@ public abstract class AbstractDialog extends Page {
         optionBtv = new TextView(optionB, null);
         optionBtv.setPos().setGravity(Gravity.center).setOffsetX(2 + optionA.length() / 2).setOffsetY(2);
         answer = optionAtv;
+        answer.setColors(answerColor);
         if (bottom != null && bottom.length() > 0) {
             bottomTv = new TextView(bottom, null);
             bottomTv.setPos().setGravity(Gravity.centerBottom);

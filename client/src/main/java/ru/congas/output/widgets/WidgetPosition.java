@@ -26,13 +26,13 @@ public class WidgetPosition {
         return this;
     }
 
-    public WidgetPosition setOffset(int alignX, int alignY) {
-        this.offsetX = alignX;
-        this.offsetY = alignY;
+    public WidgetPosition setOffset(int offsetX, int offsetY) {
+        this.offsetX = offsetX;
+        this.offsetY = offsetY;
         return this;
     }
 
-    public WidgetPosition resetAlign() {
+    public WidgetPosition resetOffset() {
         setOffset(0, 0);
         return this;
     }
@@ -48,10 +48,10 @@ public class WidgetPosition {
             case center:
             case centerTop:
             case centerBottom:
-                pos = (total_width - widget_width) / 2;
+                pos = (total_width - widget_width) / 2 + offsetX;
                 break;
             default:
-                pos = total_width - widget_width;
+                pos = total_width - widget_width + offsetX;
                 break;
         }
         return checkCoordinate(pos, total_width);
@@ -68,10 +68,10 @@ public class WidgetPosition {
             case leftCenter:
             case center:
             case rightCenter:
-                pos = (total_height - widget_height) / 2;
+                pos = (total_height - widget_height) / 2 + offsetY;
                 break;
             default:
-                pos = total_height - widget_height;
+                pos = total_height - widget_height + offsetY;
                 break;
         }
         return checkCoordinate(pos, total_height);

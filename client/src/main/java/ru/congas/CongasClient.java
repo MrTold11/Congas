@@ -9,6 +9,7 @@ import ru.congas.input.InputThread;
 import ru.congas.input.SystemHandler;
 import ru.congas.loader.StorageManager;
 import ru.congas.output.RenderThread;
+import ru.congas.pages.CloseCongas;
 import ru.congas.pages.MainMenu;
 import ru.congas.pages.Page;
 import ru.congas.pages.SettingsPage;
@@ -29,6 +30,7 @@ public class CongasClient {
     private static StorageManager storageManager = null;
     private static volatile boolean run = true;
     private static volatile boolean debug = true;
+    private static boolean sendReport = false;
 
     private static final Stack<SimpleGame> pageStack = new Stack<>();
     private static final SystemHandler systemHandler = new SystemHandler();
@@ -109,7 +111,10 @@ public class CongasClient {
     }
 
     public synchronized static void back() {
-        if (pageStack.size() < 2) return;
+        if (pageStack.size() < 2 && pageStack.peek() == current) {
+            openPage(new CloseCongas());
+            return;
+        }
         SimpleGame previous = pageStack.peek() == current ? pageStack.pop() : current;
         if (debug) logger.info("Going back from " + previous.getName() + " to " + pageStack.peek().getName());
         input.removeHandler(previous);
@@ -152,7 +157,12 @@ public class CongasClient {
     }
 
     public static boolean reportSendEnabled() {
-        return false;
+        return sendReport;
+    }
+
+    public void enableReport(boolean enable) {
+        logger.info("Report send " + (enable ? "ON" : "OFF"));
+        sendReport = enable;
     }
 
 }

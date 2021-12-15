@@ -8,7 +8,7 @@ import ru.congas.output.widgets.TextView;
 /**
  * @author Mr_Told
  */
-public class ErrorScreen extends Page {
+public final class ErrorScreen extends Page {
 
     final Ansi blue = Ansi.ansi().bgRgb(8,39,245);
     TextView error, errorText, itsOk, hint;
@@ -19,7 +19,7 @@ public class ErrorScreen extends Page {
         this.error = new TextView("Oops! An error has occurred:", blue);
         errorText = new TextView(error + "(" + cause + ")", blue);
         boolean sendReport = CongasClient.reportSendEnabled() && !cause.startsWith("TestGameCrash");
-        itsOk = new TextView("It's OK!" + (sendReport ? " Error report will be sent!" : ""), blue);
+        itsOk = new TextView("It's OK! " + (sendReport ? "Error report will be sent!" : "But error report won't be send :("), blue);
         hint = new TextView("Press any key to continue", Ansi.ansi().bgRgb(255, 255, 255).fgBlack());
         errorText.setPos().setOffsetY(1);
         itsOk.setPos().setOffsetY(2);
