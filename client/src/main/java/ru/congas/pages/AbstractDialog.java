@@ -66,10 +66,6 @@ public abstract class AbstractDialog extends Page {
         answer.setColors(answerColor);
     }
 
-    public void resized(int w, int h) {
-        initCanvas(w, h);
-    }
-
     @Override
     public void updateCanvas() {
         optionAtv.render(this);

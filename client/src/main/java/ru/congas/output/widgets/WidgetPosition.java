@@ -26,14 +26,14 @@ public class WidgetPosition {
         return this;
     }
 
-    public WidgetPosition setAlign(int alignX, int alignY) {
+    public WidgetPosition setOffset(int alignX, int alignY) {
         this.offsetX = alignX;
         this.offsetY = alignY;
         return this;
     }
 
     public WidgetPosition resetAlign() {
-        setAlign(0, 0);
+        setOffset(0, 0);
         return this;
     }
 

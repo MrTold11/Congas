@@ -70,10 +70,6 @@ public abstract class AbstractValueSelector extends Page {
         valuesList[current].setColors(sel);
     }
 
-    public void resized(int w, int h) {
-        initCanvas(w, h);
-    }
-
     @Override
     public void updateCanvas() {
         titleTv.render(this);

@@ -19,6 +19,10 @@ public abstract class Page extends SimpleGame {
         this.temporary = temporary;
     }
 
+    public void resized(int w, int h) {
+        initCanvas(w, h);
+    }
+
     public boolean isTemporary() {
         return temporary;
     }

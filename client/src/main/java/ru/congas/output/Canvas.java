@@ -186,6 +186,22 @@ public abstract class Canvas {
         this.resetMatrix = resetMatrix;
     }
 
+    protected void fillColor(Ansi color) {
+        for (int i = 0; i < getMatrixHeight(); i++) {
+            for (int j = 0; j < getMatrixWidth(); j++) {
+                colors[i][j] = color;
+            }
+        }
+    }
+
+    protected void fillChar(char c) {
+        for (int i = 0; i < getMatrixHeight(); i++) {
+            for (int j = 0; j < getMatrixWidth(); j++) {
+                matrix[i][j] = c;
+            }
+        }
+    }
+
     public int getFps() {
         return fps;
     }

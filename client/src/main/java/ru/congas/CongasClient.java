@@ -79,6 +79,7 @@ public class CongasClient {
                 e.printStackTrace();
             } else
                 logger.fatal("Failed to start Congas client", e);
+            close();
         }
     }
 
@@ -123,16 +124,16 @@ public class CongasClient {
      */
     public static void close() {
         if (!run) return;
-        logger.info("Stopping CongasClient...");
+        if (logger != null) logger.info("Stopping CongasClient...");
 
         run = false;
         try {
             if (terminal != null) terminal.close();
             if (storageManager != null) storageManager.close();
         } catch (Exception e) {
-            logger.fatal(e);
+            if (logger != null) logger.fatal(e);
         } finally {
-            logger.info("end!");
+            if (logger != null) logger.info("end!");
         }
         System.exit(0);
     }
@@ -148,6 +149,10 @@ public class CongasClient {
     public void enableDebug(boolean enable) {
         logger.info("Debug mode " + (enable ? "ON" : "OFF"));
         debug = enable;
+    }
+
+    public static boolean reportSendEnabled() {
+        return false;
     }
 
 }

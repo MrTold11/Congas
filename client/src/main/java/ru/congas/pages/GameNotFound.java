@@ -31,10 +31,6 @@ public final class GameNotFound extends Page {
         return false;
     }
 
-    public void resized(int w, int h) {
-        initCanvas(w, h);
-    }
-
     @Override
     public void updateCanvas() {
         notFoundText.render(this);

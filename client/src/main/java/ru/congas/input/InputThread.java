@@ -6,8 +6,8 @@ import org.jline.terminal.Attributes;
 import org.jline.terminal.Terminal;
 import org.jline.utils.NonBlockingReader;
 import ru.congas.CongasClient;
+import ru.congas.pages.ErrorScreen;
 
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -46,20 +46,23 @@ public class InputThread extends Thread {
      * Loop for input reading and further processing
      */
     public void run() {
-        try {
-            int read;
-            while (CongasClient.isRunning()) {
-                read = reader.read();
-                if (CongasClient.isDebug())
-                    logger.info("Pressed char: " + Keycode.getKeyName(read) + " (" + read + ")");
-                handle(read);
+        while (CongasClient.isRunning()) {
+            try {
+                int read;
+                while (CongasClient.isRunning()) {
+                    read = reader.read();
+                    if (CongasClient.isDebug())
+                        logger.info("Pressed char: " + Keycode.getKeyName(read) + " (" + read + ")");
+                    handle(read);
+                }
+                reader.close();
+            } catch (Exception e) {
+                logger.fatal("Fatal error into Input Thread: ", e);
+                CongasClient.openPage(new ErrorScreen("Fatal error into Input Thread ",
+                        handlers.size() == 0 ? "null" : handlers.get(handlers.size() - 1).getHandlerName()));
             }
-            reader.close();
-        } catch (IOException e) {
-            logger.fatal(e);
-        } finally {
-            terminal.setAttributes(attrs);
         }
+        terminal.setAttributes(attrs);
     }
 
     /**
