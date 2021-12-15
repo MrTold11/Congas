@@ -20,11 +20,12 @@ public class Tictac extends SimpleGame {
     public Tictac() {
         super("TicTacToe", true, false, false,
                 false, 10, 4, 4);
+        start();
     }
 
     public void launch() {
         start();
-        super.launch();
+        //super.launch();
     }
 
     private void switchPos(int x, int y) {

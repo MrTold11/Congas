@@ -28,11 +28,12 @@ public class Sapper extends SimpleGame {
     public Sapper() {
         super("Sapper", true, false, false,
                 false, 10, 22, 22);
+        start();
     }
 
     public void launch() {
         start();
-        super.launch();
+
     }
 
     private void start() {
