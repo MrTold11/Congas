@@ -13,7 +13,6 @@ public abstract class Canvas {
     final protected Logger logger;
     final String name;
 
-    private volatile boolean eraseScreen = true; //Clear console output before new frame render
     private volatile boolean resetMatrix = true; //Reset matrix[][] and colors[][] before update
 
     /**
@@ -42,14 +41,13 @@ public abstract class Canvas {
     /**
      * Main canvas constructor
      * @param name game name (for logger)
-     * @param eraseScreen erase screen on every frame render
      * @param resetMatrix reset matrices before it's update
      * @param liveUpdate update console output on every frame
      * @param fps frames per second (if liveUpdate is enabled) and loop iterations per second
      * @param matrix_w initial matrices width
      * @param matrix_h initial matrices height
      */
-    public Canvas(String name, boolean eraseScreen, boolean resetMatrix,
+    public Canvas(String name, boolean resetMatrix,
                   boolean liveUpdate, int fps, int matrix_w, int matrix_h) {
         logger = LogManager.getLogger("Canvas_" + name);
         this.name = name;
@@ -57,7 +55,6 @@ public abstract class Canvas {
         //enableMultiplexer(enableMultiplexer);
         setLiveUpdate(liveUpdate);
         setFps(fps);
-        setEraseScreen(eraseScreen);
         setResetMatrix(resetMatrix);
     }
 
@@ -176,11 +173,6 @@ public abstract class Canvas {
         forceUpdate(true);
     }
 
-    protected void setEraseScreen(boolean eraseScreen) {
-        if (CongasClient.isDebug()) logger.info("Screen erase is " + (eraseScreen ? "on" : "off"));
-        this.eraseScreen = eraseScreen;
-    }
-
     protected void setResetMatrix(boolean resetMatrix) {
         if (CongasClient.isDebug()) logger.info("Matrices reset is " + (resetMatrix ? "on" : "off"));
         this.resetMatrix = resetMatrix;
@@ -216,10 +208,6 @@ public abstract class Canvas {
 
     public boolean updateNeeded() {
         return needUpdate;
-    }
-
-    public boolean eraseScreen() {
-        return eraseScreen;
     }
 
     public boolean resetMatrix() {

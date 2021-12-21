@@ -17,12 +17,12 @@ import java.io.PrintWriter;
 public class RenderThread extends Thread {
 
     final String S_RST   = Ansi.ansi().reset().toString();
-    final String S_ERASE = Ansi.ansi().eraseScreen().toString();
     final String S_NL    = Ansi.ansi().newline().toString();
-    final String S_SCR1  = Ansi.ansi().scrollUp(1).toString();
+    final String S_CDL   = Ansi.ansi().cursorDownLine().toString();
 
     final Logger logger = LogManager.getLogger(RenderThread.class);
     final Terminal terminal;
+    //Using PrintWriter instead of OutputStream removes all screen lags
     final PrintWriter out;
 
     private volatile Canvas canvas = null;
@@ -111,10 +111,11 @@ public class RenderThread extends Thread {
 
         char[][] matrix = canvas.getMatrix();
         Ansi[][] colors = canvas.getColors().clone();
-        LineBuilder lineB = new LineBuilder(matrix[0].length, out);
+        StringBuilder outSB = new StringBuilder(matrix.length * matrix[0].length + height - matrix.length + width - matrix[0].length);
 
+        outSB.append(S_CDL);
         if (CongasClient.isDebug())
-            lineB.append(S_NL).print();
+            outSB.append(S_NL);
 
         Ansi prevC = null;
         char c;
@@ -122,31 +123,32 @@ public class RenderThread extends Thread {
             for (int ch = 0; ch < matrix[0].length; ch++) {
                 if (prevC != colors[line][ch]) {
                     prevC = colors[line][ch];
-                    lineB.append(prevC == null ? S_RST : prevC.toString());
+                    outSB.append(prevC == null ? S_RST : prevC.toString());
                 }
 
                 c = matrix[line][ch];
                 if (c == Character.MIN_VALUE) c = ' ';
-                lineB.append(c);
+                outSB.append(c);
             }
-            lineB.append('\n');
-            lineB.print();
+            outSB.append(S_NL);
         }
 
-        lineB.append(S_RST);
+        outSB.append(S_RST);
         for (int i = 0; i < (height - matrix.length); i++)
-            lineB.append('\n');
-
-        if (canvas.eraseScreen()) out.write(S_ERASE);
+            outSB.append(S_NL);
 
         if (CongasClient.isDebug()) {
-            lineB.append("FPS: ").append(averageFps).append('/').append(canvas.getFps())
+            outSB.append("FPS: ").append(averageFps).append('/').append(canvas.getFps())
                     .append(" (").append(minFps).append(" - ").append(maxFps).append(')');
         }
-        lineB.print();
-        lineB.end();
+
+        out.write(outSB.toString());
     }
 
+    /**
+     * Render frame with properties from canvas including that bad-looking multiplexing
+     * @throws IOException if terminal print goes wrong
+     */
     private void renderMultiplexer() throws Exception {
         if (canvas == null)
             throw new Exception("Canvas is null on rendering!");
@@ -160,6 +162,10 @@ public class RenderThread extends Thread {
         int outRealWidth  = matrix[0].length * canvas.getMultiplexer();
         StringBuilder sb = new StringBuilder(outRealHeight * outRealWidth + height - outRealHeight + width - outRealWidth);
         StringBuilder lineSb = new StringBuilder(outRealWidth + 1);
+
+        sb.append(S_CDL);
+        if (CongasClient.isDebug())
+            sb.append(S_NL);
 
         Ansi prevC = null;
         char c;
@@ -178,21 +184,18 @@ public class RenderThread extends Thread {
                     lineSb.append(c);
 
             }
-            lineSb.append('\n');
+            lineSb.append(S_NL);
             for (int mc = 0; mc < canvas.getMultiplexer(); mc++)
                 sb.append(lineSb);
         }
 
         sb.append(S_RST);
         for (int i = 0; i < (height - outRealHeight); i++)
-            sb.append('\n');
-
-        if (canvas.eraseScreen()) out.write(S_ERASE);
+            sb.append(S_NL);
 
         if (CongasClient.isDebug()) {
             sb.append("FPS: ").append(averageFps).append('/').append(canvas.getFps())
                     .append(" (").append(minFps).append(" - ").append(maxFps).append(')');
-            out.write(S_NL);
         }
         out.write(sb.toString());
     }

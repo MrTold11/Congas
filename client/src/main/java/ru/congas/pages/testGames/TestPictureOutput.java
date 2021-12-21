@@ -20,7 +20,7 @@ public class TestPictureOutput extends SimpleGame {
     Ansi prev = null;
 
     public TestPictureOutput() {
-        super("TestPO", false, false, true, 60, 10, 10);
+        super("TestPO", false, true, 60, 10, 10);
         image = new BufferedImage(144, 32, BufferedImage.TYPE_INT_RGB);
         Graphics g = image.getGraphics();
         g.setFont(new Font("Dialog", Font.PLAIN, 24));

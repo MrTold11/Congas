@@ -14,7 +14,7 @@ public class TestAppCrash extends SimpleGame {
     boolean crashOnRender = false;
 
     public TestAppCrash() {
-        super("TestAppCrash", false, false, false, 10, 68, 10);
+        super("TestAppCrash", false, false, 10, 68, 10);
         setOverrideEscape(true);
     }
 

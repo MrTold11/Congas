@@ -14,7 +14,7 @@ public abstract class Page extends SimpleGame {
      * @param temporary true if this page shouldn't be opened on back() function (temporary page for decision/game pause)
      */
     public Page(String name, boolean temporary) {
-        super(name, false, true, false, 10, 10, 10);
+        super(name, true, false, 10, 10, 10);
         setGameStatus(false);
         this.temporary = temporary;
     }
