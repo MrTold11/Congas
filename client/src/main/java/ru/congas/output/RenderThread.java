@@ -18,6 +18,9 @@ public class RenderThread extends Thread {
 
     final static Ansi A_RST   = Ansi.ansi().reset();
     final static Ansi A_ERASE = Ansi.ansi().eraseScreen();
+    final static byte[] B_RST   = Ansi.ansi().reset().toString().getBytes();
+    final static byte[] B_ERASE = Ansi.ansi().eraseScreen().toString().getBytes();
+    final static byte[] B_NL    = Ansi.ansi().newline().toString().getBytes();
 
     final Logger logger = LogManager.getLogger(RenderThread.class);
     final Terminal terminal;
@@ -73,7 +76,8 @@ public class RenderThread extends Thread {
 
                     if (canvas.liveUpdate() || canvas.updateNeeded()) {
                         canvas.forceUpdate(false);
-                        render();
+                        if (canvas.getMultiplexer() == 1) render();
+                        else renderMultiplexer();
                     }
 
                     loopTimer = System.currentTimeMillis() - loopTimer;
@@ -106,22 +110,67 @@ public class RenderThread extends Thread {
         if (canvas.resetMatrix()) canvas.resetMatrices();
         canvas.updateCanvas();
 
-        int outRealHeight = canvas.getMatrix().length * canvas.getMultiplexer();
-        int outRealWidth  = canvas.getMatrix()[0].length * canvas.getMultiplexer();
+        char[][] matrix = canvas.getMatrix();
+        Ansi[][] colors = canvas.getColors().clone();
+        int outRealHeight = matrix.length * canvas.getMultiplexer();
+        int outRealWidth  = matrix[0].length * canvas.getMultiplexer();
+        StringBuilder sb = new StringBuilder(outRealHeight * outRealWidth + height - outRealHeight + width - outRealWidth);
+
+        Ansi prevC = null;
+        char c;
+        for (int line = 0; line < matrix.length; line++) {
+            for (int ch = 0; ch < matrix[0].length; ch++) {
+                if (prevC != colors[line][ch]) {
+                    prevC = colors[line][ch];
+                    sb.append(prevC == null ? A_RST.toString() : prevC.toString());
+                }
+
+                c = matrix[line][ch];
+                if (c == Character.MIN_VALUE) c = ' ';
+                sb.append(c);
+            }
+            sb.append('\n');
+        }
+
+        sb.append(A_RST.toString());
+        for (int i = 0; i < (height - outRealHeight); i++)
+            sb.append('\n');
+
+        if (canvas.eraseScreen()) out.write(B_ERASE);
+
+        if (CongasClient.isDebug()) {
+            sb.append("FPS: ").append(averageFps).append('/').append(canvas.getFps())
+                    .append(" (").append(minFps).append(" - ").append(maxFps).append(')');
+            out.write(B_NL);
+        }
+        out.write(sb.toString().getBytes());
+    }
+
+    private void renderMultiplexer() throws Exception {
+        if (canvas == null)
+            throw new Exception("Canvas is null on rendering!");
+
+        if (canvas.resetMatrix()) canvas.resetMatrices();
+        canvas.updateCanvas();
+
+        char[][] matrix = canvas.getMatrix();
+        Ansi[][] colors = canvas.getColors().clone();
+        int outRealHeight = matrix.length * canvas.getMultiplexer();
+        int outRealWidth  = matrix[0].length * canvas.getMultiplexer();
         StringBuilder sb = new StringBuilder(outRealHeight * outRealWidth + height - outRealHeight + width - outRealWidth);
         StringBuilder lineSb = new StringBuilder(outRealWidth + 1);
 
         Ansi prevC = null;
         char c;
-        for (int line = 0; line < canvas.getMatrix().length; line++) {
+        for (int line = 0; line < matrix.length; line++) {
             lineSb.setLength(0);
-            for (int ch = 0; ch < canvas.getMatrix()[0].length; ch++) {
-                if (prevC != canvas.getColors()[line][ch]) {
-                    prevC = canvas.getColors()[line][ch];
+            for (int ch = 0; ch < matrix[0].length; ch++) {
+                if (prevC != colors[line][ch]) {
+                    prevC = colors[line][ch];
                     lineSb.append(prevC == null ? A_RST.toString() : prevC.toString());
                 }
 
-                c = canvas.getMatrix()[line][ch];
+                c = matrix[line][ch];
                 if (c == Character.MIN_VALUE) c = ' ';
 
                 for (int mc = 0; mc < canvas.getMultiplexer(); mc++)
@@ -137,12 +186,12 @@ public class RenderThread extends Thread {
         for (int i = 0; i < (height - outRealHeight); i++)
             sb.append('\n');
 
-        if (canvas.eraseScreen()) out.write(A_ERASE.toString().getBytes());
+        if (canvas.eraseScreen()) out.write(B_ERASE);
 
         if (CongasClient.isDebug()) {
             sb.append("FPS: ").append(averageFps).append('/').append(canvas.getFps())
                     .append(" (").append(minFps).append(" - ").append(maxFps).append(')');
-            out.write("\n".getBytes());
+            out.write(B_NL);
         }
         out.write(sb.toString().getBytes());
     }
