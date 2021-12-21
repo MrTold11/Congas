@@ -77,10 +77,9 @@ public class CongasClient {
             input.start();
         } catch (Exception e) {
             if (logger == null) {
-                System.err.println("Error during logger init");
+                System.err.println("Error during logger init. This exception won't be reported!");
                 e.printStackTrace();
-            } else
-                logger.fatal("Failed to start Congas client", e);
+            } else logger.fatal("Failed to start Congas client", e);
             close();
         }
     }
@@ -129,7 +128,7 @@ public class CongasClient {
      */
     public static void close() {
         if (!run) return;
-        if (logger != null) logger.info("Stopping CongasClient...");
+        if (logger != null) logger.info("Stopping CongasClient from thread " + Thread.currentThread().getName());
 
         run = false;
         try {

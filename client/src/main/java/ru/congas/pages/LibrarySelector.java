@@ -14,7 +14,7 @@ public final class LibrarySelector extends AbstractValueSelector {
 
     @Override
     protected void selected(String value) {
-        CongasClient.openPage(new GameSelector(StorageManager.getLoader(value)));
+        CongasClient.openPage(new AppSelector(StorageManager.getLoader(value)));
     }
 
 }

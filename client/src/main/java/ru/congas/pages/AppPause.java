@@ -5,10 +5,10 @@ import ru.congas.CongasClient;
 /**
  * @author Mr_Told
  */
-public final class GamePause extends AbstractValueSelector {
+public final class AppPause extends AbstractValueSelector {
 
-    public GamePause() {
-        super("GamePause", "PAUSE", false, false, "Resume", "Settings", "Leave game");
+    public AppPause() {
+        super("AppPause", "PAUSE", false, false, "Resume", "Settings", "Close app");
     }
 
     @Override
@@ -20,7 +20,7 @@ public final class GamePause extends AbstractValueSelector {
             case "Settings":
                 CongasClient.openPage(new SettingsPage());
                 break;
-            case "Leave game":
+            case "Close app":
                 CongasClient.openPage(new LibrarySelector());
                 break;
         }

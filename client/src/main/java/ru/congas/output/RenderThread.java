@@ -47,6 +47,8 @@ public class RenderThread extends Thread {
         while (CongasClient.isRunning()) {
             int nw, nh;         // new width and height
             int whc = 0;        // width-height time counter, used for check width and height every 500ms only
+            long secondDelta = 0;
+            int minFps = 1000, maxFps = 0, averageFps;
             try {
                 long loopTimer; // timer for loop time (to keep target fps)
                 while (CongasClient.isRunning()) {
@@ -80,13 +82,9 @@ public class RenderThread extends Thread {
      * Render frame with properties from canvas
      * @throws IOException if terminal print goes wrong
      */
-    private void render() throws IOException {
-        if (canvas == null) {
-            logger.error("Canvas is null on rendering!");
-            out.write((Ansi.ansi().bg(Ansi.Color.RED).toString() + "No canvas....." + Ansi.ansi().reset().toString()).getBytes());
-            CongasClient.openPage(new MainMenu());
-            return;
-        }
+    private void render() throws Exception {
+        if (canvas == null)
+            throw new Exception("Canvas is null on rendering!");
 
         if (canvas.resetMatrix()) canvas.resetMatrices();
         canvas.updateCanvas();

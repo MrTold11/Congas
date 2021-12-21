@@ -28,7 +28,7 @@ public abstract class AbstractValueSelector extends Page {
         align += 2;
         valuesList = new TextView[values.length];
         for (int i = 0; i < values.length; i++) {
-            valuesList[i] = new TextView(values[i], bg);
+            valuesList[i] = new TextView(values[i] == null ? "null" : values[i], bg);
             valuesList[i].setPos().setGravity(Gravity.centerTop).setOffsetY(align += 2);
         }
         valuesList[current].setColors(sel);

@@ -2,7 +2,7 @@ package ru.congas.input;
 
 import ru.congas.CongasClient;
 import ru.congas.SimpleGame;
-import ru.congas.pages.GamePause;
+import ru.congas.pages.AppPause;
 
 /**
  * @author Mr_Told
@@ -24,7 +24,7 @@ public class SystemHandler implements InputHandler {
             escTime = System.currentTimeMillis();
             if (current.overrideEscape()) return false;
             if (current.isGame())
-                CongasClient.openPage(new GamePause());
+                CongasClient.openPage(new AppPause());
             else
                 CongasClient.back();
             return true;
@@ -37,8 +37,8 @@ public class SystemHandler implements InputHandler {
         return "SystemHandler";
     }
 
-    public void setCurrent(SimpleGame game) {
-        this.current = game;
+    public void setCurrent(SimpleGame app) {
+        this.current = app;
     }
 
 }

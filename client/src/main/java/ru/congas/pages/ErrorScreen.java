@@ -18,7 +18,7 @@ public final class ErrorScreen extends Page {
         setOverrideEscape(true);
         this.error = new TextView("Oops! An error has occurred:", blue);
         errorText = new TextView(error + "(" + cause + ")", blue);
-        boolean sendReport = CongasClient.reportSendEnabled() && !cause.startsWith("TestGameCrash");
+        boolean sendReport = CongasClient.reportSendEnabled() && !cause.startsWith("TestAppCrash");
         itsOk = new TextView("It's OK! " + (sendReport ? "Error report will be sent!" : "But error report won't be send :("), blue);
         hint = new TextView("Press any key to continue", Ansi.ansi().bgRgb(255, 255, 255).fgBlack());
         errorText.setPos().setOffsetY(1);

@@ -14,15 +14,24 @@ import java.util.Map;
  */
 public class StorageManager {
 
-    final Logger logger = LogManager.getLogger("Storage");
-    final static Map<String, GameLoader> anthology = new HashMap<>();
-    final static TestGames testGames = new TestGames();
-    final static String testGamesName = "TestGames";
+    final static Logger logger = LogManager.getLogger("Storage");
+    final static Map<String, AnthologyLoader> anthology = new HashMap<>();
+    final static String testAppsName = "TestApps";
+    static TestAppsLoader TEST_APPS_LOADER = null;
 
     public void init(boolean loadLocal) {
+        if (CongasClient.isDebug()) loadTestApps();
         if (loadLocal) loadJars(new File("games/"));
         //todo load global
         logger.info("Loaded " + anthology.size() + " anthologies");
+    }
+
+    private static void loadTestApps() {
+        try {
+            TEST_APPS_LOADER = new TestAppsLoader(testAppsName);
+        } catch (IOException e) {
+            logger.error("Couldn't load test games: ", e);
+        }
     }
 
     private void loadJars(File dir) {
@@ -44,7 +53,7 @@ public class StorageManager {
 
     private void tryLoad(File f, String name) {
         try {
-            AnthologyLoader a = new AnthologyLoader(f, name);
+            AnthologyJarLoader a = new AnthologyJarLoader(f, name);
             if (a.hasGames()) {
                 if (!anthology.containsKey(name))
                     anthology.put(name, a);
@@ -58,13 +67,14 @@ public class StorageManager {
 
     public static String[] getLoadedAnthologies() {
         if (CongasClient.isDebug()) {
-            if (!anthology.containsKey(testGamesName)) anthology.put(testGamesName, testGames);
+            if (TEST_APPS_LOADER == null) loadTestApps();
+            if (TEST_APPS_LOADER != null && !anthology.containsKey(testAppsName)) anthology.put(testAppsName, TEST_APPS_LOADER);
         } else
-            anthology.remove(testGamesName);
+            anthology.remove(testAppsName);
         return anthology.keySet().toArray(new String[0]);
     }
 
-    public static GameLoader getLoader(String name) {
+    public static AnthologyLoader getLoader(String name) {
         return anthology.get(name);
     }
 

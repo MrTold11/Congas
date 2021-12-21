@@ -7,14 +7,14 @@ import ru.congas.output.widgets.TextView;
 /**
  * @author Mr_Told
  */
-public class TestGameCrash extends SimpleGame {
+public class TestAppCrash extends SimpleGame {
 
     TextView text = new TextView("Press [Space] for Render crash. Press any other key for Input crash.", null);
     int[] k;
     boolean crashOnRender = false;
 
-    public TestGameCrash() {
-        super("TestGameCrash", false, false, false, 10, 68, 10);
+    public TestAppCrash() {
+        super("TestAppCrash", false, false, false, 10, 68, 10);
         setOverrideEscape(true);
     }
 
