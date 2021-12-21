@@ -66,7 +66,7 @@ public abstract class Canvas {
      * @param w matrices width
      * @param h matrices height
      */
-    protected void initCanvas(int w, int h) {
+    protected synchronized void initCanvas(int w, int h) {
         if (w <= 0) w = 1;
         if (h <= 0) h = 1;
         if (matrix != null && w == matrix[0].length && h == matrix.length) return;

@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Client" type="JarApplication">
-    <option name="JAR_PATH" value="$PROJECT_DIR$/out/artifacts/Congas_client_main_jar/Congas.client.main.jar" />
+    <option name="JAR_PATH" value="$PROJECT_DIR$/client_dir/Congas.client.main.jar" />
     <option name="VM_PARAMETERS" value="-Xmx1G -Xms128M" />
     <option name="WORKING_DIRECTORY" value="$ProjectFileDir$\client_dir" />
     <option name="ALTERNATIVE_JRE_PATH" />

@@ -20,7 +20,7 @@ public class TestPictureOutput extends SimpleGame {
     Ansi prev = null;
 
     public TestPictureOutput() {
-        super("TestPO", false, false, true, 10, 10, 10);
+        super("TestPO", false, false, true, 60, 10, 10);
         image = new BufferedImage(144, 32, BufferedImage.TYPE_INT_RGB);
         Graphics g = image.getGraphics();
         g.setFont(new Font("Dialog", Font.PLAIN, 24));
@@ -38,8 +38,8 @@ public class TestPictureOutput extends SimpleGame {
     @Override
     public void updateCanvas() {
         getColors()[pos / getColors()[0].length][pos % getColors()[0].length] = prev;
-        if (pos >= getMatrix().length * getMatrix()[0].length) pos = 1;
         pos++;
+        if (pos >= getMatrix().length * getMatrix()[0].length) pos = 1;
         prev = getColors()[pos / getColors()[0].length][pos % getColors()[0].length];
         getColors()[pos / getColors()[0].length][pos % getColors()[0].length] = a3;
     }

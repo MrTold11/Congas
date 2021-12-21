@@ -20,7 +20,7 @@ public class TestPOErase extends SimpleGame {
     Ansi prev = null;
 
     public TestPOErase() {
-        super("TestPOE", true, false, true, 10, 10, 10);
+        super("TestPOE", true, false, true, 60, 10, 10);
         image = new BufferedImage(144, 32, BufferedImage.TYPE_INT_RGB);
         Graphics g = image.getGraphics();
         g.setFont(new Font("Dialog", Font.PLAIN, 24));

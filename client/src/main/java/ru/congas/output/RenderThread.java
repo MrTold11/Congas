@@ -8,7 +8,7 @@ import ru.congas.CongasClient;
 import ru.congas.pages.ErrorScreen;
 
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.PrintWriter;
 
 /**
  * Console renderer thread
@@ -16,15 +16,14 @@ import java.io.OutputStream;
  */
 public class RenderThread extends Thread {
 
-    final static Ansi A_RST   = Ansi.ansi().reset();
-    final static Ansi A_ERASE = Ansi.ansi().eraseScreen();
-    final static byte[] B_RST   = Ansi.ansi().reset().toString().getBytes();
-    final static byte[] B_ERASE = Ansi.ansi().eraseScreen().toString().getBytes();
-    final static byte[] B_NL    = Ansi.ansi().newline().toString().getBytes();
+    final String S_RST   = Ansi.ansi().reset().toString();
+    final String S_ERASE = Ansi.ansi().eraseScreen().toString();
+    final String S_NL    = Ansi.ansi().newline().toString();
+    final String S_SCR1  = Ansi.ansi().scrollUp(1).toString();
 
     final Logger logger = LogManager.getLogger(RenderThread.class);
     final Terminal terminal;
-    final OutputStream out;
+    final PrintWriter out;
 
     private volatile Canvas canvas = null;
 
@@ -35,7 +34,7 @@ public class RenderThread extends Thread {
     public RenderThread(Terminal terminal) {
         super("Renderer");
         this.terminal = terminal;
-        this.out = terminal.output();
+        this.out = terminal.writer();
         width = terminal.getWidth();
         height = terminal.getHeight();
     }
@@ -112,9 +111,10 @@ public class RenderThread extends Thread {
 
         char[][] matrix = canvas.getMatrix();
         Ansi[][] colors = canvas.getColors().clone();
-        int outRealHeight = matrix.length * canvas.getMultiplexer();
-        int outRealWidth  = matrix[0].length * canvas.getMultiplexer();
-        StringBuilder sb = new StringBuilder(outRealHeight * outRealWidth + height - outRealHeight + width - outRealWidth);
+        LineBuilder lineB = new LineBuilder(matrix[0].length, out);
+
+        if (CongasClient.isDebug())
+            lineB.append(S_NL).print();
 
         Ansi prevC = null;
         char c;
@@ -122,28 +122,29 @@ public class RenderThread extends Thread {
             for (int ch = 0; ch < matrix[0].length; ch++) {
                 if (prevC != colors[line][ch]) {
                     prevC = colors[line][ch];
-                    sb.append(prevC == null ? A_RST.toString() : prevC.toString());
+                    lineB.append(prevC == null ? S_RST : prevC.toString());
                 }
 
                 c = matrix[line][ch];
                 if (c == Character.MIN_VALUE) c = ' ';
-                sb.append(c);
+                lineB.append(c);
             }
-            sb.append('\n');
+            lineB.append('\n');
+            lineB.print();
         }
 
-        sb.append(A_RST.toString());
-        for (int i = 0; i < (height - outRealHeight); i++)
-            sb.append('\n');
+        lineB.append(S_RST);
+        for (int i = 0; i < (height - matrix.length); i++)
+            lineB.append('\n');
 
-        if (canvas.eraseScreen()) out.write(B_ERASE);
+        if (canvas.eraseScreen()) out.write(S_ERASE);
 
         if (CongasClient.isDebug()) {
-            sb.append("FPS: ").append(averageFps).append('/').append(canvas.getFps())
+            lineB.append("FPS: ").append(averageFps).append('/').append(canvas.getFps())
                     .append(" (").append(minFps).append(" - ").append(maxFps).append(')');
-            out.write(B_NL);
         }
-        out.write(sb.toString().getBytes());
+        lineB.print();
+        lineB.end();
     }
 
     private void renderMultiplexer() throws Exception {
@@ -167,7 +168,7 @@ public class RenderThread extends Thread {
             for (int ch = 0; ch < matrix[0].length; ch++) {
                 if (prevC != colors[line][ch]) {
                     prevC = colors[line][ch];
-                    lineSb.append(prevC == null ? A_RST.toString() : prevC.toString());
+                    lineSb.append(prevC == null ? S_RST : prevC.toString());
                 }
 
                 c = matrix[line][ch];
@@ -182,18 +183,18 @@ public class RenderThread extends Thread {
                 sb.append(lineSb);
         }
 
-        sb.append(A_RST.toString());
+        sb.append(S_RST);
         for (int i = 0; i < (height - outRealHeight); i++)
             sb.append('\n');
 
-        if (canvas.eraseScreen()) out.write(B_ERASE);
+        if (canvas.eraseScreen()) out.write(S_ERASE);
 
         if (CongasClient.isDebug()) {
             sb.append("FPS: ").append(averageFps).append('/').append(canvas.getFps())
                     .append(" (").append(minFps).append(" - ").append(maxFps).append(')');
-            out.write(B_NL);
+            out.write(S_NL);
         }
-        out.write(sb.toString().getBytes());
+        out.write(sb.toString());
     }
 
     /**
