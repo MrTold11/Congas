@@ -6,7 +6,6 @@ import org.apache.logging.log4j.Logger;
 import org.fusesource.jansi.Ansi;
 import ru.congas.CongasClient;
 import ru.congas.pages.ErrorScreen;
-import ru.congas.pages.MainMenu;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -26,6 +25,7 @@ public class RenderThread extends Thread {
 
     private volatile Canvas canvas = null;
 
+    private int minFps = 0, maxFps = 60, averageFps = 60;
     private int width, height;
     private boolean running = false;
 
@@ -46,18 +46,29 @@ public class RenderThread extends Thread {
 
         while (CongasClient.isRunning()) {
             int nw, nh;         // new width and height
-            int whc = 0;        // width-height time counter, used for check width and height every 500ms only
-            long secondDelta = 0;
-            int minFps = 1000, maxFps = 0, averageFps;
+            int whc = 0;        // width-height time counter, used for check width and height every 200ms only
+            int secondDelta = 0;
+            int ticks = 0, minTickTime = 1000, maxTickTime = 0;
             try {
                 long loopTimer; // timer for loop time (to keep target fps)
                 while (CongasClient.isRunning()) {
                     loopTimer = System.currentTimeMillis();
 
-                    if (whc > 500) {
+                    if (secondDelta >= 1000) {
+                        minFps = secondDelta / maxTickTime;
+                        maxFps = secondDelta / minTickTime;
+                        averageFps = 1000 * ticks / secondDelta;
+                        minTickTime = secondDelta;
+                        maxTickTime = 0;
+                        ticks = 0;
+                        secondDelta = 0;
+                    }
+
+                    if (whc > 200) {
                         nw = terminal.getWidth();
                         nh = terminal.getHeight() - 1;
                         if (nw != width || nh != height) resize(nw, nh);
+                        whc = 0;
                     }
 
                     if (canvas.liveUpdate() || canvas.updateNeeded()) {
@@ -66,9 +77,15 @@ public class RenderThread extends Thread {
                     }
 
                     loopTimer = System.currentTimeMillis() - loopTimer;
-                    if (loopTimer < canvas.getLoopTime()) //noinspection BusyWait
+                    if (loopTimer < canvas.getLoopTime()) { //noinspection BusyWait
                         sleep(canvas.getLoopTime() - loopTimer);
-                    whc += canvas.getLoopTime();
+                        loopTimer = canvas.getLoopTime();
+                    }
+                    whc += loopTimer;
+                    secondDelta += loopTimer;
+                    ticks++;
+                    if (loopTimer > maxTickTime) maxTickTime = (int) loopTimer;
+                    if (loopTimer < minTickTime) minTickTime = (int) loopTimer;
                 }
             } catch (Exception e) {
                 logger.fatal("Fatal error into Render Thread: ", e);
@@ -121,6 +138,12 @@ public class RenderThread extends Thread {
             sb.append('\n');
 
         if (canvas.eraseScreen()) out.write(A_ERASE.toString().getBytes());
+
+        if (CongasClient.isDebug()) {
+            sb.append("FPS: ").append(averageFps).append('/').append(canvas.getFps())
+                    .append(" (").append(minFps).append(" - ").append(maxFps).append(')');
+            out.write("\n".getBytes());
+        }
         out.write(sb.toString().getBytes());
     }
 
