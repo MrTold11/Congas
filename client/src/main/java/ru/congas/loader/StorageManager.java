@@ -54,10 +54,12 @@ public class StorageManager {
     private void tryLoad(File f, String name) {
         try {
             AnthologyJarLoader a = new AnthologyJarLoader(f, name);
-            if (a.hasGames()) {
-                if (!anthology.containsKey(name))
+            if (a.appsCount() > 0) {
+                if (!anthology.containsKey(name)) {
+                    if (a.appsCount() == 1) name += ": " + a.getApps()[0];
                     anthology.put(name, a);
-                else logger.warn("Anthology already loaded: " + name);
+                } else
+                    logger.warn("Anthology already loaded: " + name);
             }
             else if (CongasClient.isDebug()) logger.warn("Find anthology without games: " + name);
         } catch (IOException e) {

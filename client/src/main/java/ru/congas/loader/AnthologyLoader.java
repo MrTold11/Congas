@@ -55,4 +55,8 @@ public abstract class AnthologyLoader extends URLClassLoader {
         return appsMap.keySet().toArray(new String[0]);
     }
 
+    public int appsCount() {
+        return appsMap.size();
+    }
+
 }

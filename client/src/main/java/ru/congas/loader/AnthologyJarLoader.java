@@ -81,8 +81,4 @@ public class AnthologyJarLoader extends AnthologyLoader {
         return je.isDirectory() || !je.getName().endsWith(".class");
     }
 
-    public boolean hasGames() {
-        return appsMap.size() > 0;
-    }
-
 }

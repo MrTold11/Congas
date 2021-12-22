@@ -1,6 +1,7 @@
 package ru.congas.pages;
 
 import ru.congas.CongasClient;
+import ru.congas.loader.AnthologyLoader;
 import ru.congas.loader.StorageManager;
 
 /**
@@ -14,7 +15,9 @@ public final class LibrarySelector extends AbstractValueSelector {
 
     @Override
     protected void selected(String value) {
-        CongasClient.openPage(new AppSelector(StorageManager.getLoader(value)));
+        AnthologyLoader al = StorageManager.getLoader(value);
+        if (al.appsCount() > 1) CongasClient.openPage(new AppSelector(StorageManager.getLoader(value)));
+        else CongasClient.openPage(al.getNewAppInstance(al.getApps()[0]));
     }
 
 }
