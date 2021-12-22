@@ -31,7 +31,7 @@ public class TestAppsLoader extends AnthologyJarLoader {
      */
     @Override
     protected boolean rejectJarEntry(JarEntry je) {
-        return !je.getName().startsWith("ru/congas/pages/testGames/") || super.rejectJarEntry(je);
+        return !je.getName().startsWith("ru/congas/pages/testApps/") || super.rejectJarEntry(je);
     }
 
 }

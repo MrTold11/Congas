@@ -1,4 +1,4 @@
-package ru.congas.pages.testGames;
+package ru.congas.pages.testApps;
 
 import ru.congas.SimpleGame;
 import ru.congas.input.Keycode;

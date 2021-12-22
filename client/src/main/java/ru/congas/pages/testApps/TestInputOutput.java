@@ -1,4 +1,4 @@
-package ru.congas.pages.testGames;
+package ru.congas.pages.testApps;
 
 import org.fusesource.jansi.Ansi;
 import ru.congas.SimpleGame;
