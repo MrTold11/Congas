@@ -93,7 +93,7 @@ public class RenderThread extends Thread {
             } catch (Exception e) {
                 logger.fatal("Fatal error into Render Thread: ", e);
                 CongasClient.openPage(new ErrorScreen("Fatal error into Render Thread ",
-                        canvas == null ? "null" : canvas.getName()));
+                        canvas == null ? "null" : canvas.getName(), e));
             }
         }
     }

@@ -79,7 +79,7 @@ public class WidgetPosition {
 
     private int checkCoordinate(int val, int max) {
         if (val < 0) return 0;
-        return Math.min(val, max);
+        return Math.min(val, max - 1);
     }
 
 }

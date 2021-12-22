@@ -59,7 +59,7 @@ public class InputThread extends Thread {
             } catch (Exception e) {
                 logger.fatal("Fatal error into Input Thread: ", e);
                 CongasClient.openPage(new ErrorScreen("Fatal error into Input Thread ",
-                        handlers.size() == 0 ? "null" : handlers.get(handlers.size() - 1).getHandlerName()));
+                        handlers.size() == 0 ? "null" : handlers.get(handlers.size() - 1).getHandlerName(), e));
             }
         }
         terminal.setAttributes(attrs);

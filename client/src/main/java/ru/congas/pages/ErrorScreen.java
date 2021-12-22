@@ -5,6 +5,10 @@ import ru.congas.CongasClient;
 import ru.congas.output.widgets.Gravity;
 import ru.congas.output.widgets.TextView;
 
+import java.io.File;
+import java.io.PrintWriter;
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * @author Mr_Told
  */
@@ -13,8 +17,11 @@ public final class ErrorScreen extends Page {
     final Ansi blue = Ansi.ansi().bgRgb(8,39,245);
     TextView error, errorText, itsOk, hint;
 
-    public ErrorScreen(String error, String cause) {
+    private static final AtomicInteger fatalCounter = new AtomicInteger(0);
+
+    public ErrorScreen(String error, String cause, Exception e) {
         super("ErrorPage", true);
+        checkFatal(error, cause, e);
         setOverrideEscape(true);
         this.error = new TextView("Oops! An error has occurred:", blue);
         errorText = new TextView(error + "(" + cause + ")", blue);
@@ -25,6 +32,42 @@ public final class ErrorScreen extends Page {
         itsOk.setPos().setOffsetY(2);
         hint.setPos().setGravity(Gravity.centerBottom);
         //todo error report
+    }
+
+    private void checkFatal(String error, String cause, Exception err) {
+        int fatal = fatalCounter.incrementAndGet();
+        if (fatal > 50) {
+            try {
+                logger.fatal("Too many crashes! Stopping CongasClient!");
+                if (fatal == 51) {
+                    try {
+                        File crashDir = new File(CongasClient.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile();
+                        crashDir = new File(crashDir, "crashes");
+                        if (!crashDir.exists()) //noinspection ResultOfMethodCallIgnored
+                            crashDir.mkdirs();
+                        if (crashDir.isDirectory() && crashDir.exists()) {
+                            try (PrintWriter crashPrintWriter = new PrintWriter(new File(crashDir, "crash_" + System.currentTimeMillis() + ".txt"))) {
+                                crashPrintWriter.write("Extreme crash has happened: ");
+                                crashPrintWriter.write(error);
+                                crashPrintWriter.write("\nCause: ");
+                                crashPrintWriter.write(cause);
+                                crashPrintWriter.write("\nTrace: ");
+                                err.printStackTrace(crashPrintWriter);
+                            }
+                        }
+                        CongasClient.close();
+                        System.exit(88888886);
+                    } catch (Exception e) {
+                        logger.fatal("Error during crash save: ", e);
+                        e.printStackTrace();
+                        System.exit(88888887);
+                    }
+                } else
+                    System.exit(88888888);
+            } catch (Exception ignored) {}
+
+            System.exit(88888889);
+        }
     }
 
     @Override
