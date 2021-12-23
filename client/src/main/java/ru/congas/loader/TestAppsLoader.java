@@ -1,5 +1,7 @@
 package ru.congas.loader;
 
+import ru.congas.CongasClient;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.jar.JarEntry;
@@ -10,8 +12,11 @@ import java.util.jar.JarEntry;
  */
 public class TestAppsLoader extends AnthologyJarLoader {
 
+    final String path = "ru/congas/pages/testApps";
+
     public TestAppsLoader(String name) throws IOException {
         super(new File(TestAppsLoader.class.getProtectionDomain().getCodeSource().getLocation().getPath()), name);
+        if (CongasClient.isDebug()) logger.info("Loaded " + appsCount() + " test applications");
     }
 
     /**
@@ -21,7 +26,7 @@ public class TestAppsLoader extends AnthologyJarLoader {
      */
     @Override
     protected boolean rejectClass(Class<?> c) {
-        return super.rejectClass(c) || c.getPackage() == null || !c.getPackage().getName().equals("ru.congas.pages.testGames");
+        return super.rejectClass(c) || c.getPackage() == null || !c.getPackage().getName().equals(path.replace('/', '.'));
     }
 
     /**
@@ -31,7 +36,7 @@ public class TestAppsLoader extends AnthologyJarLoader {
      */
     @Override
     protected boolean rejectJarEntry(JarEntry je) {
-        return !je.getName().startsWith("ru/congas/pages/testApps/") || super.rejectJarEntry(je);
+        return !je.getName().startsWith(path) || super.rejectJarEntry(je);
     }
 
 }

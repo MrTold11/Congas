@@ -70,7 +70,7 @@ public class StorageManager {
     public static String[] getLoadedAnthologies() {
         if (CongasClient.isDebug()) {
             if (TEST_APPS_LOADER == null) loadTestApps();
-            if (TEST_APPS_LOADER != null && !anthology.containsKey(testAppsName)) anthology.put(testAppsName, TEST_APPS_LOADER);
+            if (TEST_APPS_LOADER != null && TEST_APPS_LOADER.appsCount() != 0 && !anthology.containsKey(testAppsName)) anthology.put(testAppsName, TEST_APPS_LOADER);
         } else
             anthology.remove(testAppsName);
         return anthology.keySet().toArray(new String[0]);

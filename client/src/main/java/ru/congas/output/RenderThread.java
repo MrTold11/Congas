@@ -143,6 +143,7 @@ public class RenderThread extends Thread {
         }
 
         out.write(outSB.toString());
+        out.flush();
     }
 
     /**
