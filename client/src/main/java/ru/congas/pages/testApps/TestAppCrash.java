@@ -1,7 +1,8 @@
 package ru.congas.pages.testApps;
 
 import ru.congas.SimpleGame;
-import ru.congas.input.Keycode;
+import ru.congas.input.keys.Key;
+import ru.congas.input.keys.KeyPressed;
 import ru.congas.output.widgets.TextView;
 
 /**
@@ -23,8 +24,8 @@ public class TestAppCrash extends SimpleGame {
     }
 
     @Override
-    public boolean handle(int c) {
-        if (c == Keycode.SPACE) crashOnRender = true;
+    public boolean handle(KeyPressed event) {
+        if (event.getDefinedKey() == Key.SPACE) crashOnRender = true;
         else k[0] = 1;
         forceUpdate();
         return true;

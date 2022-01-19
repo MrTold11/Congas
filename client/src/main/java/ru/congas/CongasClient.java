@@ -14,6 +14,7 @@ import ru.congas.pages.MainMenu;
 import ru.congas.pages.Page;
 import ru.congas.pages.SettingsPage;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Stack;
 
 /**
@@ -51,26 +52,25 @@ public class CongasClient {
             logger.info("Starting CongasClient");
             Runtime.getRuntime().addShutdownHook(new Thread(CongasClient::close, "ShutdownHook"));
 
-            terminal = TerminalBuilder.builder().jansi(true).build();
-            if (terminal == null) throw new RuntimeException("Failed to create terminal");
+            input = new InputThread();
+            terminal = TerminalBuilder.terminal(input);
+
             Size s = terminal.getSize();
             if (s.getRows() <= 1 || s.getColumns() <= 1) {
                 logger.error("Too small terminal: " + s.getColumns() + "x" + s.getRows());
-                terminal.output().write("This terminal is not suitable for Congas. Sorry :(".getBytes());
-                Thread.sleep(7000);
+                terminal.writer().print("This terminal is not suitable for Congas. Sorry :(");
+                Thread.sleep(10000);
                 close();
                 return;
             }
 
             storageManager = new StorageManager();
-            input = new InputThread(terminal);
+            input.init(terminal);
             renderer = new RenderThread(terminal);
 
             storageManager.init(true);
             input.addHandler(systemHandler);
 
-            //new TestInputOutput().launch();
-            //new TestPictureOutput().launch();
             openPage(new MainMenu());
 
             renderer.start();

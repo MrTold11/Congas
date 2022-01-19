@@ -2,6 +2,7 @@ package ru.congas.pages;
 
 import org.fusesource.jansi.Ansi;
 import ru.congas.CongasClient;
+import ru.congas.input.keys.KeyPressed;
 import ru.congas.output.widgets.Gravity;
 import ru.congas.output.widgets.TextView;
 
@@ -71,7 +72,7 @@ public final class ErrorScreen extends Page {
     }
 
     @Override
-    public boolean handle(int c) {
+    public boolean handle(KeyPressed event) {
         CongasClient.openPage(new MainMenu());
         return true;
     }

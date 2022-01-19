@@ -2,7 +2,8 @@ package ru.congas.pages;
 
 import org.fusesource.jansi.Ansi;
 import ru.congas.CongasClient;
-import ru.congas.input.Keycode;
+import ru.congas.input.keys.Key;
+import ru.congas.input.keys.KeyPressed;
 import ru.congas.output.widgets.Gravity;
 import ru.congas.output.widgets.TextView;
 
@@ -23,8 +24,8 @@ public final class AppNotFound extends Page {
     }
 
     @Override
-    public boolean handle(int c) {
-        if (c == Keycode.SPACE || c == Keycode.ENTER) {
+    public boolean handle(KeyPressed event) {
+        if (event.getDefinedKey() == Key.SPACE || event.getDefinedKey() == Key.ENTER) {
             CongasClient.back();
             return true;
         }

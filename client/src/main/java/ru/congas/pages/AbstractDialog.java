@@ -1,7 +1,7 @@
 package ru.congas.pages;
 
 import org.fusesource.jansi.Ansi;
-import ru.congas.input.Keycode;
+import ru.congas.input.keys.KeyPressed;
 import ru.congas.output.widgets.Gravity;
 import ru.congas.output.widgets.TextView;
 
@@ -43,17 +43,17 @@ public abstract class AbstractDialog extends Page {
     }
 
     @Override
-    public boolean handle(int c) {
-        switch (c) {
-            case Keycode.ENTER:
+    public boolean handle(KeyPressed event) {
+        switch (event.getDefinedKey()) {
+            case ENTER:
                 if (answer == optionAtv) clickA();
                 else clickB();
                 forceUpdate();
                 return true;
-            case 'a':
-            case 'ф':
-            case 'd':
-            case 'в':
+            case KEY_A:
+            case KEY_D:
+            case LEFT:
+            case RIGHT:
                 switchAnswer();
                 forceUpdate();
                 return true;

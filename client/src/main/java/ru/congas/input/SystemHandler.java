@@ -2,6 +2,8 @@ package ru.congas.input;
 
 import ru.congas.CongasClient;
 import ru.congas.SimpleGame;
+import ru.congas.input.keys.Key;
+import ru.congas.input.keys.KeyPressed;
 import ru.congas.pages.AppPause;
 
 /**
@@ -13,9 +15,9 @@ public class SystemHandler implements InputHandler {
     private volatile SimpleGame current = null;
 
     @Override
-    public boolean handle(int c) {
+    public boolean handle(KeyPressed event) {
         if (current == null) return false;
-        if (c == Keycode.ESCAPE) {
+        if (event.getDefinedKey() == Key.ESCAPE) {
             if (System.currentTimeMillis() - escTime < 250) {
                 if (current.overrideEscape()) CongasClient.back();
                 else CongasClient.close();

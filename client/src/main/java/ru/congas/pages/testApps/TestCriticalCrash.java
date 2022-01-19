@@ -30,11 +30,6 @@ public class TestCriticalCrash extends SimpleGame {
     }
 
     @Override
-    public boolean handle(int c) {
-        return false;
-    }
-
-    @Override
     public void updateCanvas() {
         k[0] = 1;
     }

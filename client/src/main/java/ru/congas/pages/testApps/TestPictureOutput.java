@@ -31,11 +31,6 @@ public class TestPictureOutput extends SimpleGame {
     }
 
     @Override
-    public boolean handle(int c) {
-        return false;
-    }
-
-    @Override
     public void updateCanvas() {
         getColors()[pos / getColors()[0].length][pos % getColors()[0].length] = prev;
         pos++;

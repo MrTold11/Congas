@@ -1,7 +1,7 @@
 package ru.congas.pages;
 
 import org.fusesource.jansi.Ansi;
-import ru.congas.input.Keycode;
+import ru.congas.input.keys.KeyPressed;
 import ru.congas.output.widgets.Gravity;
 import ru.congas.output.widgets.TextView;
 
@@ -35,20 +35,20 @@ public abstract class AbstractValueSelector extends Page {
     }
 
     @Override
-    public boolean handle(int c) {
-        switch (c) {
-            case Keycode.ENTER:
-            case Keycode.SPACE:
+    public boolean handle(KeyPressed event) {
+        switch (event.getDefinedKey()) {
+            case ENTER:
+            case SPACE:
                 selected(valuesList[current].getText());
                 forceUpdate();
                 return true;
-            case 'w':
-            case 'ц':
+            case KEY_W:
+            case UP:
                 goUp();
                 forceUpdate();
                 return true;
-            case 's':
-            case 'ы':
+            case KEY_S:
+            case DOWN:
                 goDown();
                 forceUpdate();
                 return true;

@@ -4,6 +4,7 @@ import org.jline.terminal.Terminal;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.fusesource.jansi.Ansi;
+import org.jline.terminal.impl.AbstractTerminal;
 import ru.congas.CongasClient;
 import ru.congas.pages.ErrorScreen;
 
@@ -21,7 +22,7 @@ public class RenderThread extends Thread {
     final String S_CDL   = Ansi.ansi().cursorDownLine().toString();
 
     final Logger logger = LogManager.getLogger(RenderThread.class);
-    final Terminal terminal;
+    final AbstractTerminal terminal;
     //Using PrintWriter instead of OutputStream removes all screen lags
     final PrintWriter out;
 
@@ -33,7 +34,7 @@ public class RenderThread extends Thread {
 
     public RenderThread(Terminal terminal) {
         super("Renderer");
-        this.terminal = terminal;
+        this.terminal = (AbstractTerminal) terminal;
         this.out = terminal.writer();
         width = terminal.getWidth();
         height = terminal.getHeight();
@@ -114,8 +115,7 @@ public class RenderThread extends Thread {
         StringBuilder outSB = new StringBuilder(matrix.length * matrix[0].length + height - matrix.length + width - matrix[0].length);
 
         outSB.append(S_CDL);
-        if (CongasClient.isDebug())
-            outSB.append(S_NL);
+        outSB.append(S_NL);
 
         Ansi prevC = null;
         char c;

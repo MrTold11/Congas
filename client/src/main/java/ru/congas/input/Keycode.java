@@ -7,6 +7,7 @@ import java.util.Map;
  * Contains special input keys with names
  * @author Mr_Told
 **/
+@Deprecated
 public final class Keycode {
 
     public static final int BACKSPACE  =  8;
@@ -18,15 +19,41 @@ public final class Keycode {
     private static final Map<Integer, String> keyNames = new HashMap<>();
 
     static {
-        keyNames.put(8, "BACKSPACE");
-        keyNames.put(9, "TAB");
-        keyNames.put(13, "ENTER");
-        keyNames.put(27, "ESCAPE");
-        keyNames.put(32, "SPACE");
+        keyNames.put(BACKSPACE, "BACKSPACE");
+        keyNames.put(TAB, "TAB");
+        keyNames.put(ENTER, "ENTER");
+        keyNames.put(ESCAPE, "ESCAPE");
+        keyNames.put(SPACE, "SPACE");
     }
 
     public static String getKeyName(int k) {
-        return keyNames.getOrDefault(k, String.valueOf((char) k));
+        return keyNames.getOrDefault(k, k < 0 ? "" : String.valueOf((char) k));
+    }
+
+    public static String getKeyName(int k, boolean alt, boolean shift, boolean control) {
+        if (!alt && !shift && !control) return getKeyName(k);
+
+        StringBuilder sb = new StringBuilder();
+        if (alt) sb.append("ALT");
+        if (shift) {
+            if (sb.length() != 0)
+                sb.append(" + ");
+            sb.append("SHIFT");
+        }
+        if (control) {
+            if (sb.length() != 0)
+                sb.append(" + ");
+            sb.append("CTRL");
+        }
+        String kn = getKeyName(k);
+        if (!kn.isEmpty()) {
+            if (sb.length() != 0)
+                sb.append(" + ");
+            sb.append(kn);
+        }
+        if (sb.length() == 0)
+            sb.append("NONE");
+        return sb.toString();
     }
 
 }

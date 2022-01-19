@@ -10,9 +10,7 @@ repositories {
 }
 
 dependencies {
-    implementation files('lib/jansi-2.1.0.jar')
-    implementation 'org.jline:jline:3.21.0'
-    implementation 'org.jline:jline-terminal-jansi:3.21.0'
+    implementation 'org.fusesource.jansi:jansi:2.4.0'
     implementation project(':core')
 }
 
