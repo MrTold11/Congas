@@ -68,7 +68,7 @@ public class InputThread extends Thread {
                         continue;
                     }
 
-                    if (CongasClient.isDebug()) logger.info("Input char: " + read + " (" + (char) read + ")");
+                    //if (CongasClient.isDebug()) logger.info("Input char: " + read + " (" + (char) read + ")");
 
                     /*
                     if (read == ESCAPE.getCode() && reader.peek(1) > 0) {
@@ -88,7 +88,7 @@ public class InputThread extends Thread {
                     */
                     if (read == ESCAPE.getCode() && reader.peek(1) > 0) {
                         List<Character> sequence = new ArrayList<>();
-                        while (reader.peek(1) > 0) {
+                        while (reader.peek(1) > 0 && (reader.peek(1) != 27 || sequence.size() == 0)) {
                             int r = reader.read();
                             if (r < 0) break;
                             sequence.add((char) r);
@@ -96,11 +96,11 @@ public class InputThread extends Thread {
                         KeyPressed event = readSequence(sequence);
                         if (event != null) {
                             safeHandle(event);
-                            continue;
                         } else if (CongasClient.isDebug()) {
                             if (sequence.size() < 10) logger.warn("Unknown sequence: " + sequence);
                             else logger.warn("Unknown sequence: " + sequence.subList(0, 10) + " and " + (sequence.size() - 9) + " more elements");
                         }
+                        continue;
                     }
 
                     //if (CongasClient.isDebug())
