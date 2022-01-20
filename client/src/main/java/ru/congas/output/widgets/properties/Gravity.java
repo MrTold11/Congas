@@ -1,4 +1,4 @@
-package ru.congas.output.widgets;
+package ru.congas.output.widgets.properties;
 
 /**
  * @author Mr_Told

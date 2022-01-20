@@ -4,7 +4,7 @@ import org.fusesource.jansi.Ansi;
 import ru.congas.CongasClient;
 import ru.congas.input.keys.Key;
 import ru.congas.input.keys.KeyPressed;
-import ru.congas.output.widgets.Gravity;
+import ru.congas.output.widgets.properties.Gravity;
 import ru.congas.output.widgets.TextView;
 
 /**
@@ -18,9 +18,9 @@ public final class AppNotFound extends Page {
     public AppNotFound(String gameName, String packageName) {
         super("AppNotFound", true);
         notFoundText = new TextView("Application " + gameName + " not found in anthology " + packageName, Ansi.ansi().bgRed());
-        notFoundText.setPos().setGravity(Gravity.center);
+        notFoundText.pos().setGravity(Gravity.center);
         pressToContinue = new TextView("Press [Space] or [Enter] to continue", null);
-        pressToContinue.setPos().setGravity(Gravity.centerBottom);
+        pressToContinue.pos().setGravity(Gravity.centerBottom);
     }
 
     @Override

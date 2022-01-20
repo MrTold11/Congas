@@ -2,7 +2,7 @@ package ru.congas.pages;
 
 import org.fusesource.jansi.Ansi;
 import ru.congas.input.keys.KeyPressed;
-import ru.congas.output.widgets.Gravity;
+import ru.congas.output.widgets.properties.Gravity;
 import ru.congas.output.widgets.TextView;
 
 /**
@@ -23,13 +23,13 @@ public abstract class AbstractValueSelector extends Page {
         int align = hint ? 2 : 0;
 
         titleTv = new TextView(title, Ansi.ansi().bgMagenta());
-        titleTv.setPos().setGravity(Gravity.centerTop).setOffsetY(align);
+        titleTv.pos().setGravity(Gravity.centerTop).setOffsetY(align);
 
         align += 2;
         valuesList = new TextView[values.length];
         for (int i = 0; i < values.length; i++) {
             valuesList[i] = new TextView(values[i] == null ? "null" : values[i], bg);
-            valuesList[i].setPos().setGravity(Gravity.centerTop).setOffsetY(align += 2);
+            valuesList[i].pos().setGravity(Gravity.centerTop).setOffsetY(align += 2);
         }
         valuesList[current].setColors(sel);
     }
@@ -81,7 +81,7 @@ public abstract class AbstractValueSelector extends Page {
     protected void setHint(String text) {
         if (hintTv == null) {
             hintTv = new TextView(text, Ansi.ansi().bgRgb(77, 83, 89));
-            hintTv.setPos().setGravity(Gravity.leftTop);
+            hintTv.pos().setGravity(Gravity.leftTop);
         } else hintTv.setText(text);
     }
 

@@ -2,7 +2,7 @@ package ru.congas.pages;
 
 import org.fusesource.jansi.Ansi;
 import ru.congas.CongasClient;
-import ru.congas.output.widgets.Gravity;
+import ru.congas.output.widgets.properties.Gravity;
 import ru.congas.output.widgets.TextView;
 
 /**
@@ -43,7 +43,7 @@ public final class SettingsPage extends AbstractValueSelector {
     public SettingsPage() {
         super("SettingsPage", "SETTINGS", true, false, settings);
         setHint("Use [w]/[s] keys for navigation. Use [Enter] or [Space] to toggle selected");
-        aboutTv.setPos().setGravity(Gravity.centerBottom);
+        aboutTv.pos().setGravity(Gravity.centerBottom);
     }
 
     @Override

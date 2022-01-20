@@ -3,7 +3,7 @@ package ru.congas.pages;
 import org.fusesource.jansi.Ansi;
 import ru.congas.CongasClient;
 import ru.congas.input.keys.KeyPressed;
-import ru.congas.output.widgets.Gravity;
+import ru.congas.output.widgets.properties.Gravity;
 import ru.congas.output.widgets.TextView;
 
 import java.io.File;
@@ -29,9 +29,9 @@ public final class ErrorScreen extends Page {
         boolean sendReport = CongasClient.reportSendEnabled() && !cause.startsWith("TestAppCrash");
         itsOk = new TextView("It's OK! " + (sendReport ? "Error report will be sent!" : "But error report won't be send :("), blue);
         hint = new TextView("Press any key to continue", Ansi.ansi().bgRgb(255, 255, 255).fgBlack());
-        errorText.setPos().setOffsetY(1);
-        itsOk.setPos().setOffsetY(2);
-        hint.setPos().setGravity(Gravity.centerBottom);
+        errorText.pos().setOffsetY(1);
+        itsOk.pos().setOffsetY(2);
+        hint.pos().setGravity(Gravity.centerBottom);
         //todo error report
     }
 
