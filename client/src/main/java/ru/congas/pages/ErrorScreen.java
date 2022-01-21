@@ -21,7 +21,7 @@ public final class ErrorScreen extends Page {
     private static final AtomicInteger fatalCounter = new AtomicInteger(0);
 
     public ErrorScreen(String error, String cause, Exception e) {
-        super("ErrorPage", true);
+        super("ErrorPage", false);
         checkFatal(error, cause, e);
         setOverrideEscape(true);
         this.error = new TextView("Oops! An error has occurred:", blue);

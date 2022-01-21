@@ -1,6 +1,7 @@
 package ru.congas.pages;
 
 import ru.congas.CongasClient;
+import ru.congas.audio.AudioManager;
 
 /**
  * @author Mr_Told
@@ -18,6 +19,7 @@ public final class MainMenu extends AbstractValueSelector {
                 CongasClient.openPage(new LibrarySelector());
                 break;
             case "Store":
+                AudioManager.playClip(getClass().getResource("/audio/test.wav"));
                 break;
             case "Settings":
                 CongasClient.openPage(new SettingsPage());
