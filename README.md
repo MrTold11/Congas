@@ -17,7 +17,6 @@ Congas supports platforms maintained by JLine3:
 * FreeBSD
 * Linux
 * OS X
-* Solaris
 * Windows
 
 ## Usage
@@ -30,6 +29,8 @@ Running Congas server is similar with running a client, but additionally you hav
 * Add localisation system and Russian language
 * Move artifacts build from Intellij IDEA to Gradle
 * Add settings for console preferences
+* Implement audio system
+* Write github wiki
 
 ## Short-term TODO
 * Add ImageView
