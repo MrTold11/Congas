@@ -1,33 +1,45 @@
 package ru.congas.loader;
 
 import ru.congas.CongasClient;
+import ru.congas.SimpleApp;
 import ru.congas.SimpleGame;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 /**
- * Class for loading anthologies from a jar file
+ * Class for loading apps from a jar file
  * @author Mr_Told
  */
-public class AnthologyJarLoader extends AnthologyLoader {
+public class AppsJarLoader extends AppsLoader {
 
     /**
-     * Load and store (in map) anthology's apps
-     * @param file anthology jar file
-     * @param name anthology name
+     * Load and store (in map) package apps
+     * @param file apps jar file
+     * @param name apps group name
      * @throws IOException if there are problems with jar file
      */
-    public AnthologyJarLoader(File file, String name) throws IOException {
+    public AppsJarLoader(File file, String name) throws IOException {
         super(name, file.toURI().toURL());
 
         JarFile jarFile = new JarFile(file);
-        Enumeration<JarEntry> e = jarFile.entries();
+        if (!normalLoad(jarFile)) {
+            Enumeration<JarEntry> e = jarFile.entries();
+            dumbLoad(e);
+        }
+        jarFile.close();
+    }
 
+    private boolean normalLoad(JarFile jar) {
+        return false;
+    }
+
+    private void dumbLoad(Enumeration<JarEntry> e) {
         try {
             while (e.hasMoreElements()) {
                 JarEntry je = e.nextElement();
@@ -51,15 +63,13 @@ public class AnthologyJarLoader extends AnthologyLoader {
                 if (rejectClass(appClass)) continue;
 
                 if (Arrays.stream(appClass.getDeclaredConstructors()).anyMatch(dc -> dc.getParameterCount() == 0))
-                    appsMap.put(className, appClass.asSubclass(SimpleGame.class));
+                    appsMap.put(className, appClass.asSubclass(SimpleApp.class));
                 else
                     logger.warn("Couldn't add application " + className + " from " + name +
-                            " anthology as class " + appClass.getName() + " doesn't have an empty constructor");
+                            " package as class " + appClass.getName() + " doesn't have an empty constructor");
             }
         } catch (ClassNotFoundException ex) {
-            logger.error("Error while loading anthology " + name + ": ", ex);
-        } finally {
-            jarFile.close();
+            logger.error("Error while loading package " + name + ": ", ex);
         }
     }
 
@@ -69,7 +79,8 @@ public class AnthologyJarLoader extends AnthologyLoader {
      * @return true if it's not application
      */
     protected boolean rejectClass(Class<?> c) {
-        return c.getSuperclass() == null || !c.getSuperclass().equals(SimpleGame.class);
+        return c.getSuperclass() == null || Modifier.isAbstract(c.getModifiers()) ||
+                (!c.getSuperclass().equals(SimpleApp.class) && !c.getSuperclass().equals(SimpleGame.class));
     }
 
     /**

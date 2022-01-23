@@ -2,6 +2,8 @@ package ru.congas.pages.testApps;
 
 import org.fusesource.jansi.Ansi;
 import ru.congas.SimpleGame;
+import ru.congas.input.keys.Key;
+import ru.congas.input.keys.KeyPressed;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -9,6 +11,7 @@ import java.awt.image.BufferedImage;
 /**
  * @author Mr_Told
  */
+@SuppressWarnings("unused")
 public class TestPictureOutput extends SimpleGame {
 
     private final BufferedImage image;
@@ -20,7 +23,7 @@ public class TestPictureOutput extends SimpleGame {
     Ansi prev = null;
 
     public TestPictureOutput() {
-        super("TestPO", false, true, 60, 10, 10);
+        super("TestPO", false, true, 30, 10, 10);
         image = new BufferedImage(144, 32, BufferedImage.TYPE_INT_RGB);
         Graphics g = image.getGraphics();
         g.setFont(new Font("Dialog", Font.PLAIN, 24));
@@ -37,6 +40,18 @@ public class TestPictureOutput extends SimpleGame {
         if (pos >= getMatrix().length * getMatrix()[0].length) pos = 1;
         prev = getColors()[pos / getColors()[0].length][pos % getColors()[0].length];
         getColors()[pos / getColors()[0].length][pos % getColors()[0].length] = a3;
+    }
+
+    @Override
+    public boolean handle(KeyPressed event) {
+        if (event.getDefinedKey() == Key.UP) {
+            setFps(getFps() + 5);
+            return true;
+        } else if (event.getDefinedKey() == Key.DOWN) {
+            setFps(getFps() - 5);
+            return true;
+        }
+        return false;
     }
 
     public void resized(int w, int h) {

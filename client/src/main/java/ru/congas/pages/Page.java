@@ -1,11 +1,11 @@
 package ru.congas.pages;
 
-import ru.congas.SimpleGame;
+import ru.congas.SimpleApp;
 
 /**
  * @author Mr_Told
  */
-public abstract class Page extends SimpleGame {
+public abstract class Page extends SimpleApp {
 
     boolean temporary;
 
@@ -15,7 +15,6 @@ public abstract class Page extends SimpleGame {
      */
     public Page(String name, boolean temporary) {
         super(name, true, false, 10, 10, 10);
-        setGameStatus(false);
         this.temporary = temporary;
     }
 

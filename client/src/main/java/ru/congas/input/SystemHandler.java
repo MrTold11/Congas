@@ -1,7 +1,7 @@
 package ru.congas.input;
 
 import ru.congas.CongasClient;
-import ru.congas.SimpleGame;
+import ru.congas.SimpleApp;
 import ru.congas.input.keys.Key;
 import ru.congas.input.keys.KeyPressed;
 import ru.congas.pages.AppPause;
@@ -12,7 +12,7 @@ import ru.congas.pages.AppPause;
 public class SystemHandler implements InputHandler {
 
     private long escTime = 0;
-    private volatile SimpleGame current = null;
+    private volatile SimpleApp current = null;
 
     @Override
     public boolean handle(KeyPressed event) {
@@ -39,7 +39,7 @@ public class SystemHandler implements InputHandler {
         return "SystemHandler";
     }
 
-    public void setCurrent(SimpleGame app) {
+    public void setCurrent(SimpleApp app) {
         this.current = app;
     }
 

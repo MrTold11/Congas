@@ -155,6 +155,7 @@ public abstract class Canvas {
      * @param fps frames per second
      */
     protected final void setFps(int fps) {
+        fps = Math.max(0, Math.min(1000, fps));
         if (CongasClient.isDebug()) logger.info("Fps set from " + getFps() + " to " + fps);
         this.fps = fps;
         loopTime = fps <= 0 ? 0 : 1000 / fps;

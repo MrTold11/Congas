@@ -58,6 +58,8 @@ public class RenderThread extends Thread {
                     loopTimer = System.currentTimeMillis();
 
                     if (secondDelta >= 1000) {
+                        if (maxTickTime < 1) maxTickTime = 1;
+                        if (minTickTime < 1) minTickTime = 1;
                         minFps = secondDelta / maxTickTime;
                         maxFps = secondDelta / minTickTime;
                         averageFps = 1000 * ticks / secondDelta;

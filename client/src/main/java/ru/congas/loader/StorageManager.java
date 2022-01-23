@@ -5,7 +5,6 @@ import org.apache.logging.log4j.Logger;
 import ru.congas.CongasClient;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,12 +14,12 @@ import java.util.Map;
 public class StorageManager {
 
     final static Logger logger = LogManager.getLogger("Storage");
-    final static Map<String, AnthologyLoader> anthology = new HashMap<>();
+    final static Map<String, AppsLoader> anthology = new HashMap<>();
     final static String testAppsName = "TestApps";
     static TestAppsLoader TEST_APPS_LOADER = null;
 
     public void init(boolean loadLocal) {
-        if (CongasClient.isDebug()) loadTestApps();
+        loadTestApps();
         if (loadLocal) loadJars(new File("games/"));
         //todo load global
         logger.info("Loaded " + anthology.size() + " anthologies");
@@ -29,7 +28,7 @@ public class StorageManager {
     private static void loadTestApps() {
         try {
             TEST_APPS_LOADER = new TestAppsLoader(testAppsName);
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.error("Couldn't load test games: ", e);
         }
     }
@@ -53,7 +52,7 @@ public class StorageManager {
 
     private void tryLoad(File f, String name) {
         try {
-            AnthologyJarLoader a = new AnthologyJarLoader(f, name);
+            AppsJarLoader a = new AppsJarLoader(f, name);
             if (a.appsCount() > 0) {
                 if (!anthology.containsKey(name)) {
                     if (a.appsCount() == 1) name += ": " + a.getApps()[0];
@@ -61,10 +60,16 @@ public class StorageManager {
                 } else
                     logger.warn("Anthology already loaded: " + name);
             }
-            else if (CongasClient.isDebug()) logger.warn("Find anthology without games: " + name);
-        } catch (IOException e) {
-            if (CongasClient.isDebug()) logger.warn("Couldn't load anthology jar: " + name, e);
+            else logger.warn("Find anthology without games: " + name);
+        } catch (Exception e) {
+            logger.warn("Couldn't load anthology jar: " + name, e);
         }
+    }
+
+    public static boolean hasApps() {
+        if (anthology.size() > 0) return true;
+        return CongasClient.isDebug() && !anthology.containsKey(testAppsName)
+                && TEST_APPS_LOADER != null && TEST_APPS_LOADER.appsCount() > 0;
     }
 
     public static String[] getLoadedAnthologies() {
@@ -76,7 +81,7 @@ public class StorageManager {
         return anthology.keySet().toArray(new String[0]);
     }
 
-    public static AnthologyLoader getLoader(String name) {
+    public static AppsLoader getLoader(String name) {
         return anthology.get(name);
     }
 

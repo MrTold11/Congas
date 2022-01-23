@@ -10,6 +10,7 @@ import java.util.Random;
 /**
  * @author Mr_Told
  */
+@SuppressWarnings("unused")
 public class TestInputOutput extends SimpleGame {
 
     final Ansi star = Ansi.ansi().bgCyan();
@@ -21,11 +22,11 @@ public class TestInputOutput extends SimpleGame {
 
     @Override
     public boolean handle(KeyPressed event) {
-        if (event.getDefinedKey() == Key.KEY_W || event.getDefinedKey() == Key.UP) {
+        if (event.getDefinedKey() == Key.UP) {
             a++;
             forceUpdate();
             return true;
-        } else if (event.getDefinedKey() == Key.KEY_S || event.getDefinedKey() == Key.DOWN) {
+        } else if (event.getDefinedKey() == Key.DOWN) {
             a--;
             forceUpdate();
             return true;

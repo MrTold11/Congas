@@ -142,6 +142,13 @@ public class KeyPressed {
     }
 
     /**
+     * @return true if alt, shift or control has been pressed
+     */
+    public boolean isAltShiftControl() {
+        return isAlt() || isShift() || isCtrl();
+    }
+
+    /**
      * @return human-readable format for this event
      */
     public String toString() {

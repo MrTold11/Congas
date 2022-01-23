@@ -35,7 +35,7 @@ Running Congas server is similar with running a client, but additionally you hav
 ## Short-term TODO
 * Add ImageView
 * Add widgets demo app
-* Realise layout system
+* Realize layout system
 
 ## More
 * [Wiki](https://github.com/MrTold11/Congas/wiki)

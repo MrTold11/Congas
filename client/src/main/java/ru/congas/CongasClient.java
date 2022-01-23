@@ -14,7 +14,6 @@ import ru.congas.pages.MainMenu;
 import ru.congas.pages.Page;
 import ru.congas.pages.SettingsPage;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Stack;
 
 /**
@@ -33,9 +32,9 @@ public class CongasClient {
     private static volatile boolean debug = true;
     private static boolean sendReport = false;
 
-    private static final Stack<SimpleGame> pageStack = new Stack<>();
+    private static final Stack<SimpleApp> pageStack = new Stack<>();
     private static final SystemHandler systemHandler = new SystemHandler();
-    private static SimpleGame current = null;
+    private static SimpleApp current = null;
 
     public CongasClient() {
         instance = this;
@@ -84,13 +83,13 @@ public class CongasClient {
         }
     }
 
-    public synchronized static void openPage(SimpleGame page) {
+    public synchronized static void openPage(SimpleApp page) {
         if (page == null) {
             logger.warn("Trying to open null page!");
             return;
         }
 
-        for (SimpleGame p : pageStack) {
+        for (SimpleApp p : pageStack) {
             if (p.getName().equals(page.getName()) && p.getClass().equals(page.getClass())) {
                 while (pageStack.peek() != p) back();
                 return;
@@ -114,7 +113,7 @@ public class CongasClient {
             openPage(new CloseCongas());
             return;
         }
-        SimpleGame previous = pageStack.peek() == current ? pageStack.pop() : current;
+        SimpleApp previous = pageStack.peek() == current ? pageStack.pop() : current;
         if (debug) logger.info("Going back from " + previous.getName() + " to " + pageStack.peek().getName());
         input.removeHandler(previous);
         current = pageStack.peek();

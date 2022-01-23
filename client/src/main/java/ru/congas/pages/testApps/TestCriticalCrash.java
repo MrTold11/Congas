@@ -1,12 +1,13 @@
 package ru.congas.pages.testApps;
 
 import ru.congas.CongasClient;
-import ru.congas.SimpleGame;
+import ru.congas.SimpleApp;
 
 /**
  * @author Mr_Told
  */
-public class TestCriticalCrash extends SimpleGame {
+@SuppressWarnings("unused")
+public class TestCriticalCrash extends SimpleApp {
 
     int[] k;
 

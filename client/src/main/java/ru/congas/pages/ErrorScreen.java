@@ -73,6 +73,7 @@ public final class ErrorScreen extends Page {
 
     @Override
     public boolean handle(KeyPressed event) {
+        if (event.isAltShiftControl()) return false;
         CongasClient.openPage(new MainMenu());
         return true;
     }

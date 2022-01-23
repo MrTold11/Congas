@@ -1,6 +1,6 @@
 package ru.congas.pages.testApps;
 
-import ru.congas.SimpleGame;
+import ru.congas.SimpleApp;
 import ru.congas.input.keys.Key;
 import ru.congas.input.keys.KeyPressed;
 import ru.congas.output.widgets.TextView;
@@ -8,7 +8,8 @@ import ru.congas.output.widgets.TextView;
 /**
  * @author Mr_Told
  */
-public class TestAppCrash extends SimpleGame {
+@SuppressWarnings("unused")
+public class TestAppCrash extends SimpleApp {
 
     TextView text = new TextView("Press [Space] for Render crash. Press any other key for Input crash.", null);
     int[] k;

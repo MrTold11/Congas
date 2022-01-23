@@ -2,6 +2,7 @@ package ru.congas.pages;
 
 import ru.congas.CongasClient;
 import ru.congas.audio.AudioManager;
+import ru.congas.loader.StorageManager;
 
 /**
  * @author Mr_Told
@@ -16,7 +17,9 @@ public final class MainMenu extends AbstractValueSelector {
     protected void selected(String value) {
         switch (value) {
             case "Library":
-                CongasClient.openPage(new LibrarySelector());
+                if (StorageManager.hasApps())
+                    CongasClient.openPage(new LibrarySelector());
+                else logger.info("No apps loaded");
                 break;
             case "Store":
                 AudioManager.playClip(getClass().getResource("/audio/test.wav"));

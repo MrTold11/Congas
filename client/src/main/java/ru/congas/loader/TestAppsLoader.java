@@ -10,7 +10,7 @@ import java.util.jar.JarEntry;
  * Test applications loader
  * @author Mr_Told
  */
-public class TestAppsLoader extends AnthologyJarLoader {
+public class TestAppsLoader extends AppsJarLoader {
 
     final String path = "ru/congas/pages/testApps";
 
