@@ -30,7 +30,7 @@ public class AppsJarLoader extends AppsLoader {
         JarFile jarFile = new JarFile(file);
         if (!normalLoad(jarFile)) {
             Enumeration<JarEntry> e = jarFile.entries();
-            dumbLoad(e);
+            legacyLoad(e);
         }
         jarFile.close();
     }
@@ -39,7 +39,7 @@ public class AppsJarLoader extends AppsLoader {
         return false;
     }
 
-    private void dumbLoad(Enumeration<JarEntry> e) {
+    private void legacyLoad(Enumeration<JarEntry> e) {
         try {
             while (e.hasMoreElements()) {
                 JarEntry je = e.nextElement();

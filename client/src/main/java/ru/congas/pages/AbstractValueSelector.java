@@ -19,7 +19,7 @@ public abstract class AbstractValueSelector extends Page {
 
     public AbstractValueSelector(String name, String title, boolean hint, boolean temporary, String... values) {
         super(name, temporary);
-        if (hint) setHint("Use [w]/[s] keys for navigation. Use [Enter] or [Space] to open selected");
+        if (hint) setHint("Use arrow keys for navigation. Use [Enter] or [Space] to open selected");
         int align = hint ? 2 : 0;
 
         titleTv = new TextView(title, Ansi.ansi().bgMagenta());

@@ -11,7 +11,7 @@ import ru.congas.output.widgets.TextView;
 public final class SettingsPage extends AbstractValueSelector {
 
     CongasClient client = null;
-    TextView aboutTv = new TextView("Congas © 2021 by Mr_Told, Jailflat, DemonTerra", Ansi.ansi().bgGreen());
+    TextView aboutTv = new TextView("Congas © 2021", Ansi.ansi().bgGreen());
 
     /**
      * Array for all settings (except 'back')
@@ -42,7 +42,7 @@ public final class SettingsPage extends AbstractValueSelector {
 
     public SettingsPage() {
         super("SettingsPage", "SETTINGS", true, false, settings);
-        setHint("Use [w]/[s] keys for navigation. Use [Enter] or [Space] to toggle selected");
+        setHint("Use arrow keys for navigation. Use [Enter] or [Space] to toggle selected");
         aboutTv.pos().setGravity(Gravity.centerBottom);
     }
 

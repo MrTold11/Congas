@@ -53,6 +53,7 @@ public class CongasClient {
 
             input = new InputThread();
             terminal = TerminalBuilder.terminal(input);
+            setTitle("Congas");
 
             Size s = terminal.getSize();
             if (s.getRows() <= 1 || s.getColumns() <= 1) {
@@ -83,6 +84,11 @@ public class CongasClient {
         }
     }
 
+    private static void setTitle(String title) {
+        if (!run || terminal == null) return;
+        terminal.writer().print((char) 27 + "]2;" + title + (char) 7);
+    }
+
     public synchronized static void openPage(SimpleApp page) {
         if (page == null) {
             logger.warn("Trying to open null page!");
@@ -104,6 +110,7 @@ public class CongasClient {
         if (!(page instanceof Page && ((Page) page).isTemporary()))
             pageStack.add(page);
         if (page instanceof SettingsPage) ((SettingsPage) page).initClient(instance);
+        setTitle("Congas/" + current.getName());
         CongasClient.renderer.setCanvas(current);
         CongasClient.input.addHandler(current);
     }
@@ -117,6 +124,7 @@ public class CongasClient {
         if (debug) logger.info("Going back from " + previous.getName() + " to " + pageStack.peek().getName());
         input.removeHandler(previous);
         current = pageStack.peek();
+        setTitle("Congas/" + current.getName());
         renderer.setCanvas(current);
         systemHandler.setCurrent(current);
         input.addHandler(current);
