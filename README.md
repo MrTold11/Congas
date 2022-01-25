@@ -24,9 +24,12 @@ Usage: `java [options] -jar <filename>.jar`
 * Implement audio system
 * Write github wiki
 * Remake canvas (Ansi colors)
+* Add more abstract pages
 
 ## Short-term TODO
 * Move core code to corresponding module (client -> core)
+* Implement proper application lifecycle
+* Remake app loading from jar
 * Add ImageView
 * Add widgets demo app
 * Realize layout system
