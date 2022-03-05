@@ -1,16 +1,16 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Client" type="JarApplication">
-    <option name="JAR_PATH" value="$PROJECT_DIR$/client_dir/Congas.client.main.jar" />
+    <option name="JAR_PATH" value="$PROJECT_DIR$/client_dir/CongasClient.jar" />
     <option name="VM_PARAMETERS" value="-Xmx1G -Xms128M" />
     <option name="WORKING_DIRECTORY" value="$ProjectFileDir$\client_dir" />
     <option name="ALTERNATIVE_JRE_PATH" />
     <module name="Congas.server" />
     <method v="2">
       <option name="BuildArtifacts" enabled="true">
-        <artifact name="Congas.core.main:jar" />
+        <artifact name="CongasCore:jar" />
       </option>
       <option name="BuildArtifacts" enabled="true">
-        <artifact name="Congas.client.main:jar" />
+        <artifact name="CongasClient:jar" />
       </option>
     </method>
   </configuration>

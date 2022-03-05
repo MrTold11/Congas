@@ -20,7 +20,6 @@ allprojects {
         testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
     }
 }
-
 subprojects {
     apply plugin: 'java'
     sourceCompatibility = 1.8
@@ -28,6 +27,9 @@ subprojects {
 
     dependencies {
         implementation('org.apache.logging.log4j:log4j-core:2.17.0')
+        implementation('org.fusesource.jansi:jansi:2.4.0')
+        implementation('javax.annotation:javax.annotation-api:1.3.2')
+        implementation('com.google.code.findbugs:jsr305:3.0.0')
     }
 }
 

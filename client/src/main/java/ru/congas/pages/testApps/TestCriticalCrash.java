@@ -1,37 +1,29 @@
 package ru.congas.pages.testApps;
 
-import ru.congas.CongasClient;
-import ru.congas.SimpleApp;
+import ru.congas.core.application.Bundle;
+import ru.congas.core.pages.ErrorActivity;
+
+import java.lang.reflect.Field;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Mr_Told
  */
 @SuppressWarnings("unused")
-public class TestCriticalCrash extends SimpleApp {
-
-    int[] k;
-
-    public TestCriticalCrash() {
-        super("TestCriticalCrash", false, true, 100, 10, 10);
-
-        for (int i = 0; i < 100; i++) {
-            int finalI = i;
-            Thread t = new Thread(() -> {
-                try {
-                    Thread.sleep(finalI * 100);
-                } catch (InterruptedException ignored) {}
-                CongasClient.openPage(new TestCriticalCrash(finalI));
-            });
-            t.start();
-        }
-    }
-
-    public TestCriticalCrash(int i) {
-        super("TestCriticalCrash" + i, false, true, 100, 10, 10);
-    }
+public class TestCriticalCrash extends ErrorActivity {
 
     @Override
-    public void updateCanvas() {
-        k[0] = 1;
+    public void onCreate(Bundle args) {
+        try {
+            Field counter = ErrorActivity.class.getDeclaredField("fatalCounter");
+            ((AtomicInteger) counter.get(this)).set(777);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        super.onCreate(new Bundle().addExtra("err", "TestError")
+                .addExtra("cause", "TestAppCrash")
+                .addExtra("exception", new RuntimeException("This is test exception")));
     }
+
 }

@@ -1,17 +1,19 @@
 package ru.congas.pages;
 
-import org.fusesource.jansi.Ansi;
 import ru.congas.CongasClient;
-import ru.congas.output.widgets.properties.Gravity;
-import ru.congas.output.widgets.TextView;
+import ru.congas.core.CongasCore;
+import ru.congas.core.application.Bundle;
+import ru.congas.core.output.modifier.Color;
+import ru.congas.core.output.modifier.Style;
+import ru.congas.core.output.widgets.properties.Gravity;
+import ru.congas.core.output.widgets.TextView;
 
 /**
  * @author Mr_Told
  */
 public final class SettingsPage extends AbstractValueSelector {
 
-    CongasClient client = null;
-    TextView aboutTv = new TextView("Congas © 2021", Ansi.ansi().bgGreen());
+    CongasClient client = (CongasClient) CongasCore.getInstance(this);
 
     /**
      * Array for all settings (except 'back')
@@ -40,16 +42,23 @@ public final class SettingsPage extends AbstractValueSelector {
         return false;
     }
 
-    public SettingsPage() {
-        super("SettingsPage", "SETTINGS", true, false, settings);
+    @Override
+    public void onCreate(Bundle args) {
+        super.onCreate(generate("Settings",
+                new Style(Color.FOREST), new Style(Color.BLUE), new Style(Color.PURPLE),
+                true,
+                settings));
         setHint("Use arrow keys for navigation. Use [Enter] or [Space] to toggle selected");
-        aboutTv.pos().setGravity(Gravity.centerBottom);
+        addWidget(new TextView("Congas © 2021", new Style(Color.FOREST)))
+                .pos().setGravity(Gravity.centerBottom);
+        for (int i = 0; i < settings.length - 1; i++)
+            updateSetting(i);
     }
 
     @Override
     protected void selected(String value) {
         if (value.equals("Back")) {
-            CongasClient.back();
+            closeActivity();
             return;
         }
         if (client == null) return;
@@ -62,36 +71,14 @@ public final class SettingsPage extends AbstractValueSelector {
         }
     }
 
-    public void updateCanvas() {
-        super.updateCanvas();
-        aboutTv.render(this);
-    }
-
-    /**
-     * Get client instance for settings control
-     * @param client client instance
-     */
-    public void initClient(CongasClient client) {
-        if (client == null) {
-            logger.error("CongasClient passed null instance. Exiting settings.");
-            CongasClient.back();
-            return;
-        }
-        this.client = client;
-
-        for (int i = 0; i < settings.length - 1; i++)
-            updateSetting(i);
-    }
-
     /**
      * Update text view
      * @param index index number of setting
      */
     private void updateSetting(int index) {
-        if (index < 0 || index >= settings.length - 1) {
-            if (CongasClient.isDebug()) logger.warn("Trying to update setting with index " + index);
-            return;
-        }
+        if (index < 0 || index >= settings.length - 1)
+            throw new IndexOutOfBoundsException();
+
         updateValue(index, settings[index] + " — " + (toggle(index, false) ? "ON" : "OFF"));
     }
 

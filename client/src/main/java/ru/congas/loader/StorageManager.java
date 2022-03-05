@@ -1,92 +1,38 @@
 package ru.congas.loader;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import ru.congas.CongasClient;
-
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Mr_Told
  */
-public class StorageManager {
+public class StorageManager extends ru.congas.core.loader.StorageManager {
 
-    final static Logger logger = LogManager.getLogger("Storage");
-    final static Map<String, AppsLoader> anthology = new HashMap<>();
-    final static String testAppsName = "TestApps";
+    static final String testAppsName = "TestApps";
     static TestAppsLoader TEST_APPS_LOADER = null;
 
-    public void init(boolean loadLocal) {
-        loadTestApps();
-        if (loadLocal) loadJars(new File("games/"));
-        //todo load global
-        logger.info("Loaded " + anthology.size() + " anthologies");
-    }
-
-    private static void loadTestApps() {
+    private static boolean loadTestApps() {
         try {
             TEST_APPS_LOADER = new TestAppsLoader(testAppsName);
         } catch (Exception e) {
             logger.error("Couldn't load test games: ", e);
         }
-    }
-
-    private void loadJars(File dir) {
-        if (!dir.isDirectory() || !dir.exists()) return;
-        File[] jars = dir.listFiles((d, name) -> new File(d, name).isFile() && name.endsWith(".jar"));
-        if (jars == null || jars.length == 0) return;
-
-        for (File f : jars) {
-            String name = f.getName().substring(0, f.getName().lastIndexOf('.'));
-            //int li = name.lastIndexOf('.');
-            //if (li != -1)
-            //    name = name.substring(name.endsWith(".") ? li : li + 1);
-            String[] nms = name.split("\\.");
-            name = nms.length == 1 ? nms[0] : nms[1];
-            name = Character.toUpperCase(name.charAt(0)) + name.substring(1);
-            tryLoad(f, name);
-        }
-    }
-
-    private void tryLoad(File f, String name) {
-        try {
-            AppsJarLoader a = new AppsJarLoader(f, name);
-            if (a.appsCount() > 0) {
-                if (!anthology.containsKey(name)) {
-                    if (a.appsCount() == 1) name += ": " + a.getApps()[0];
-                    anthology.put(name, a);
-                } else
-                    logger.warn("Anthology already loaded: " + name);
-            }
-            else logger.warn("Find anthology without games: " + name);
-        } catch (Exception e) {
-            logger.warn("Couldn't load anthology jar: " + name, e);
-        }
+        return TEST_APPS_LOADER != null;
     }
 
     public static boolean hasApps() {
         if (anthology.size() > 0) return true;
         return CongasClient.isDebug() && !anthology.containsKey(testAppsName)
-                && TEST_APPS_LOADER != null && TEST_APPS_LOADER.appsCount() > 0;
+                && (TEST_APPS_LOADER != null || loadTestApps()) && TEST_APPS_LOADER.appsCount() > 0;
     }
 
     public static String[] getLoadedAnthologies() {
         if (CongasClient.isDebug()) {
             if (TEST_APPS_LOADER == null) loadTestApps();
-            if (TEST_APPS_LOADER != null && TEST_APPS_LOADER.appsCount() != 0 && !anthology.containsKey(testAppsName)) anthology.put(testAppsName, TEST_APPS_LOADER);
+            if (TEST_APPS_LOADER != null && TEST_APPS_LOADER.appsCount() != 0 && !anthology.containsKey(testAppsName))
+                anthology.put(testAppsName, TEST_APPS_LOADER);
         } else
             anthology.remove(testAppsName);
         return anthology.keySet().toArray(new String[0]);
-    }
-
-    public static AppsLoader getLoader(String name) {
-        return anthology.get(name);
-    }
-
-    public void close() {
-
     }
 
 }

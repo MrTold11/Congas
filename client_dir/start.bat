@@ -1,1 +1,2 @@
-java -Xmx256M -Xms64M -jar Congas.client.main.jar
+java -Xmx256M -Xms64M -jar CongasClient.jar
+pause

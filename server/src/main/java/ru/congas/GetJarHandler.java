@@ -4,7 +4,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.congas.network.NetworkUtils;
+import ru.congas.core.network.NetworkUtils;
 
 import java.io.IOException;
 import java.io.InputStream;

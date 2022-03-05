@@ -18,8 +18,8 @@
     <DebugAllEnabled>false</DebugAllEnabled>
     <method v="2">
       <option name="BuildArtifacts" enabled="true">
-        <artifact name="Congas.client.main:jar" />
-        <artifact name="Congas.core.main:jar" />
+        <artifact name="CongasClient:jar" />
+        <artifact name="CongasCore:jar" />
       </option>
     </method>
   </configuration>

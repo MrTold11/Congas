@@ -1,6 +1,7 @@
 package ru.congas.loader;
 
 import ru.congas.CongasClient;
+import ru.congas.core.loader.AppsJarLoader;
 
 import java.io.File;
 import java.io.IOException;

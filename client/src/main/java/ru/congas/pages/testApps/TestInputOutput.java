@@ -1,9 +1,11 @@
 package ru.congas.pages.testApps;
 
-import org.fusesource.jansi.Ansi;
-import ru.congas.SimpleGame;
-import ru.congas.input.keys.Key;
-import ru.congas.input.keys.KeyPressed;
+import ru.congas.core.application.Bundle;
+import ru.congas.core.application.GameActivity;
+import ru.congas.core.input.keys.Key;
+import ru.congas.core.input.keys.KeyPressed;
+import ru.congas.core.output.modifier.Color;
+import ru.congas.core.output.modifier.Style;
 
 import java.util.Random;
 
@@ -11,41 +13,45 @@ import java.util.Random;
  * @author Mr_Told
  */
 @SuppressWarnings("unused")
-public class TestInputOutput extends SimpleGame {
+public class TestInputOutput extends GameActivity {
 
-    final Ansi star = Ansi.ansi().bgCyan();
+    final Style star = new Style(Color.CYAN);
     int a = 0;
 
-    public TestInputOutput() {
-        super("TestIO", false, true, 30, 10, 10);
+    @Override
+    public void onCreate(Bundle args) {
+        super.onCreate(args);
+        setTps(30);
     }
 
     @Override
     public boolean handle(KeyPressed event) {
         if (event.getDefinedKey() == Key.UP) {
             a++;
-            forceUpdate();
+            screen.updateCanvas();
             return true;
         } else if (event.getDefinedKey() == Key.DOWN) {
             a--;
-            forceUpdate();
+            screen.updateCanvas();
             return true;
         }
         return false;
     }
 
-    public void resized(int w, int h) {
-        initCanvas(w, h);
-    }
-
     @Override
-    public void updateCanvas() {
+    public void onMainLoop() {
         Random r = new Random(System.currentTimeMillis());
-        for (int i = 0; i < a; i++) {
-            int x = r.nextInt(getMatrix()[0].length);
-            int y = r.nextInt(getMatrix().length);
-            getColors()[y][x] = star;
-        }
+        runOnUiThread(() -> {
+            for (int i = 0; i < a; i++) {
+                int x = r.nextInt(screen.getWidth());
+                int y = r.nextInt(screen.getHeight());
+                getCanvas().getCell(y, x)
+                        .setChar(Math.random() > 0.5 ? '/' : '\\')
+                        .setStyle(new Style(Color.fromRgb((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255))));
+                        //.setStyle(star);
+                //getColors()[y][x] = star;
+            }
+            screen.updateCanvas();
+        });
     }
-
 }

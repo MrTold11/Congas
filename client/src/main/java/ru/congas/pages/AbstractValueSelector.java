@@ -1,37 +1,62 @@
 package ru.congas.pages;
 
-import org.fusesource.jansi.Ansi;
-import ru.congas.input.keys.KeyPressed;
-import ru.congas.output.widgets.properties.Gravity;
-import ru.congas.output.widgets.TextView;
+import ru.congas.core.application.Bundle;
+import ru.congas.core.application.PageActivity;
+import ru.congas.core.input.keys.KeyPressed;
+import ru.congas.core.output.modifier.Color;
+import ru.congas.core.output.modifier.Style;
+import ru.congas.core.output.widgets.TextView;
+import ru.congas.core.output.widgets.properties.Gravity;
 
 /**
  * @author Mr_Told
  */
-public abstract class AbstractValueSelector extends Page {
+public abstract class AbstractValueSelector extends PageActivity {
 
-    TextView titleTv, hintTv = null;
+    TextView hintTv = null;
     TextView[] valuesList;
     int current = 0;
 
-    Ansi bg = Ansi.ansi().bgYellow();
-    Ansi sel = Ansi.ansi().bgCyan();
+    Style optionStyle, selectedStyle;
 
-    public AbstractValueSelector(String name, String title, boolean hint, boolean temporary, String... values) {
-        super(name, temporary);
+    protected Bundle generate(String titleText, Style option, Style selected, Style title, boolean hint, String... values) {
+        return new Bundle()
+                .addExtra("titleText", titleText).addExtra("option", option)
+                .addExtra("selected", selected).addExtra("title", title)
+                .addExtra("hint", hint).addExtra("values", values);
+    }
+
+    public void onCreate(Bundle args) {
+        Style titleStyle;
+        String titleText;
+        String[] values;
+        boolean hint;
+        try {
+            titleText       = (String) args.getUnsafeObject("titleText");
+            selectedStyle   = (Style) args.getUnsafeObject("selected");
+            optionStyle     = (Style) args.getUnsafeObject("option");
+            titleStyle      = (Style) args.getUnsafeObject("title");
+            hint            = args.getBoolean("hint", true);
+            values          = (String[]) args.getUnsafeObject("values");
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Dialog cannot be created without arguments", e);
+        }
+        super.onCreate(args);
+
         if (hint) setHint("Use arrow keys for navigation. Use [Enter] or [Space] to open selected");
-        int align = hint ? 2 : 0;
+        int offset = hint ? 2 : 0;
 
-        titleTv = new TextView(title, Ansi.ansi().bgMagenta());
-        titleTv.pos().setGravity(Gravity.centerTop).setOffsetY(align);
+        addWidget(new TextView(titleText, titleStyle))
+                .pos().setGravity(Gravity.centerTop).setOffsetY(offset);
 
-        align += 2;
+        offset += 2;
         valuesList = new TextView[values.length];
         for (int i = 0; i < values.length; i++) {
-            valuesList[i] = new TextView(values[i] == null ? "null" : values[i], bg);
-            valuesList[i].pos().setGravity(Gravity.centerTop).setOffsetY(align += 2);
+            valuesList[i] = new TextView(values[i] == null ? "null" : values[i], optionStyle);
+            addWidget(valuesList[i]).pos().setGravity(Gravity.centerTop).setOffsetY(offset += 2);
         }
-        valuesList[current].setColors(sel);
+        valuesList[current].setPattern(selectedStyle);
+        render();
     }
 
     @Override
@@ -40,17 +65,17 @@ public abstract class AbstractValueSelector extends Page {
             case ENTER:
             case SPACE:
                 selected(valuesList[current].getText());
-                forceUpdate();
+                render();
                 return true;
             case KEY_W:
             case UP:
                 goUp();
-                forceUpdate();
+                render();
                 return true;
             case KEY_S:
             case DOWN:
                 goDown();
-                forceUpdate();
+                render();
                 return true;
         }
         return false;
@@ -58,42 +83,33 @@ public abstract class AbstractValueSelector extends Page {
 
     private void goUp() {
         if (current == 0) return;
-        valuesList[current].setColors(bg);
+        valuesList[current].setPattern(optionStyle);
         current--;
-        valuesList[current].setColors(sel);
+        valuesList[current].setPattern(selectedStyle);
     }
 
     private void goDown() {
         if (current == valuesList.length - 1) return;
-        valuesList[current].setColors(bg);
+        valuesList[current].setPattern(optionStyle);
         current++;
-        valuesList[current].setColors(sel);
-    }
-
-    @Override
-    public void updateCanvas() {
-        titleTv.render(this);
-        if (hintTv != null) hintTv.render(this);
-        for (TextView tv : valuesList)
-            tv.render(this);
+        valuesList[current].setPattern(selectedStyle);
     }
 
     protected void setHint(String text) {
         if (hintTv == null) {
-            hintTv = new TextView(text, Ansi.ansi().bgRgb(77, 83, 89));
-            hintTv.pos().setGravity(Gravity.leftTop);
+            hintTv = new TextView(text, new Style(Color.fromRgb(77, 83, 89)));
+            addWidget(hintTv).pos().setGravity(Gravity.leftTop);
         } else hintTv.setText(text);
+        render();
     }
 
     protected void updateValue(int index, String text) {
-        if (index < 0 || index >= valuesList.length) {
-            logger.warn(getName() + " trying to update value on non-existing index " + index
-                    + ". Value: " + (text == null ? "null" : text.substring(0, Math.min(16, text.length()))));
-            return;
-        }
+        if (index < 0 || index >= valuesList.length)
+            throw new IndexOutOfBoundsException();
 
-        if (text != null) valuesList[index].setText(text);
-        forceUpdate();
+        if (text != null)
+            valuesList[index].setText(text);
+        render();
     }
 
     protected abstract void selected(String value);
