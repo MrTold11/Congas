@@ -2,4 +2,5 @@ rootProject.name = 'Congas'
 include 'server'
 include 'client'
 include 'core'
+include 'anthology'
 

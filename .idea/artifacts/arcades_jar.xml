@@ -1,8 +1,11 @@
 <component name="ArtifactManager">
   <artifact type="jar" build-on-make="true" name="arcades:jar">
-    <output-path>$PROJECT_DIR$/client_dir/games</output-path>
+    <output-path>$PROJECT_DIR$/client_dir/apps</output-path>
     <root id="archive" name="anthology.arcades.main.jar">
       <element id="module-output" name="anthology.arcades.main" />
+      <element id="directory" name="META-INF">
+        <element id="dir-copy" path="$PROJECT_DIR$/anthology/arcades/src/main/java/META_INF" />
+      </element>
     </root>
   </artifact>
 </component>
