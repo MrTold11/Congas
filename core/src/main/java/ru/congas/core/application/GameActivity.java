@@ -13,11 +13,11 @@ public abstract class GameActivity extends Activity {
     private int tps = 20;
     private volatile int loopTime = 1000 / tps;
 
-    PauseThread gameThread;
+    SuspendedThread gameThread;
 
     @Override
     public void onCreate(Bundle args) {
-        gameThread = new PauseThread(getName()) {
+        gameThread = new SuspendedThread(getName()) {
 
             @Override
             public void run() {

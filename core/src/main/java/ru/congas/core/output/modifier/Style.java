@@ -31,7 +31,7 @@ public class Style {
         this.attributes = style.getAttributes().clone();
     }
 
-    public Style    setStyle(Style style) {
+    public Style setStyle(Style style) {
         if (style == null) {
             this.bg = null;
             this.fg = null;

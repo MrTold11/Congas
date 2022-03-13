@@ -1,8 +1,11 @@
 <component name="ArtifactManager">
   <artifact type="jar" build-on-make="true" name="classics:jar">
-    <output-path>$PROJECT_DIR$/client_dir/games</output-path>
+    <output-path>$PROJECT_DIR$/client_dir/apps</output-path>
     <root id="archive" name="anthology.classics.main.jar">
       <element id="module-output" name="anthology.classics.main" />
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/anthology/classics/src/main/java/META_INF/MANIFEST.MF" />
+      </element>
     </root>
   </artifact>
 </component>

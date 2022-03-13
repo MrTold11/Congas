@@ -32,7 +32,6 @@ public abstract class PageActivity extends Activity {
     public void onResize(int oldWidth, int oldHeight, int newWidth, int newHeight) {
         screen.getCanvas().clear(newWidth, newHeight);
         render();
-        screen.updateCanvas();
     }
 
 }

@@ -26,7 +26,7 @@ subprojects {
     targetCompatibility = 1.8
 
     dependencies {
-        implementation files(projectDir.toPath().getParent().getParent().toString() + '/client_dir/CongasClient.jar')
+        implementation files(projectDir.toPath().getParent().getParent().toString() + '/out/artifacts/CongasCore_jar/CongasCore.jar')
     }
 }
 

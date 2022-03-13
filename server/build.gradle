@@ -10,7 +10,8 @@ repositories {
 }
 
 dependencies {
-    implementation project(':core')
+    //implementation project(':core')
+    implementation files(projectDir.toPath().getParent().toString() + '/out/artifacts/CongasCore_jar/CongasCore.jar')
 }
 
 test {

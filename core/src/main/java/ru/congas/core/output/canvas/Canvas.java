@@ -1,5 +1,6 @@
 package ru.congas.core.output.canvas;
 
+import org.apache.logging.log4j.LogManager;
 import ru.congas.core.output.modifier.Style;
 
 /**
@@ -31,7 +32,7 @@ public class Canvas {
     public Cell getCell(int y, int x) {
         if (matrix[y][x] == null)
             matrix[y][x] = new Cell();
-        return getRawCell(y, x);
+        return matrix[y][x];
     }
 
     public int getWidth() {

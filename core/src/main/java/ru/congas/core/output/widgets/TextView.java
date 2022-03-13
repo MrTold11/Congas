@@ -8,27 +8,27 @@ import ru.congas.core.output.modifier.Style;
  */
 public class TextView extends Widget {
 
-    String string;
+    CharSequence string;
     Style style;
 
-    public TextView(String text, Style style) {
+    public TextView(CharSequence text, Style style) {
         string = text;
         this.style = style;
     }
 
     public String getText() {
-        return string;
+        return string.toString();
     }
 
-    public void setText(String string) {
+    public void setText(CharSequence string) {
         this.string = string;
     }
 
-    public Style getPattern() {
+    public Style getStyle() {
         return style;
     }
 
-    public void setPattern(Style colors) {
+    public void setStyle(Style colors) {
         this.style = colors;
     }
 

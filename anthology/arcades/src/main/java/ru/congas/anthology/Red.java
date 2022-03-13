@@ -1,15 +1,17 @@
 package ru.congas.anthology;
 
+import ru.congas.core.application.Activity;
+
 public class Red extends Hunter {
+
     boolean exam;
 
-    public void move(int x, int y, char[][] field, Settings settings){
+    public void move(int x, int y, char[][] field, Settings settings, Activity activity) {
         //System.out.println(settings.isBooster());
         if (!settings.isBooster()) {
-            if (this.x == x && this.y == y){
-                //System.out.println("Game Over");
-                System.exit(1);
-            }
+            if (this.x == x && this.y == y)
+                activity.closeActivity();
+
             if (field[this.y][this.y] == '^') {
                 this.mx = 0;
                 this.my = -1;
@@ -30,6 +32,7 @@ public class Red extends Hunter {
                             for (int i = Math.min(this.x, x); i < Math.max(this.x, x); i++) {
                                 if (field[this.y][i] != ' ') {
                                     exam = false;
+                                    break;
                                 }
                             }
                             if (exam) {
@@ -45,7 +48,6 @@ public class Red extends Hunter {
                         this.my = this.mx;
                         this.mx = c;
 
-                        this.mx *= -1;
                         this.my *= -1;
 
                         if (newcheck(field)) {
@@ -70,7 +72,6 @@ public class Red extends Hunter {
                         this.my = this.mx;
                         this.mx = c;
 
-                        this.mx *= -1;
                         this.my *= -1;
                         //System.out.println(this.mx + this.my);
                     }
@@ -109,8 +110,7 @@ public class Red extends Hunter {
             }
             this.y += this.my;
             this.x += this.mx;
-        }
-        else{
+        } else {
             move(field);
 //            if (!newcheck(field)){
 //                this.y += this.my;

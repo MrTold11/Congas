@@ -23,13 +23,12 @@ Usage: `java [options] -jar <filename>.jar`
 * Add settings for console preferences (themes maybe)
 * Implement audio system
 * Write github wiki
-* Remake canvas (Ansi colors)
 * Add more abstract pages
+* Switch from log4j to more lightweight logging library
 
 ## Short-term TODO
-* Move core code to corresponding module (client -> core)
-* Implement proper application lifecycle
-* Remake app loading from jar
+* Fix CallSuper annotation
+* Consider own manifest file
 * Add ImageView
 * Add widgets demo app
 * Realize layout system

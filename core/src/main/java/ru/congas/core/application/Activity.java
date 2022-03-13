@@ -13,6 +13,7 @@ import ru.congas.core.output.ScreenBuffer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author Mr_Told
@@ -27,6 +28,7 @@ public abstract class Activity implements InputHandler {
     protected final ScreenBuffer screen;
 
     private final String name;
+    private AtomicBoolean closed = new AtomicBoolean();
 
     public interface ActivityInstanceCreateRunnable {
         void run(Activity activity);
@@ -84,6 +86,7 @@ public abstract class Activity implements InputHandler {
 
     protected final void exceptionClose() {
         try {
+            closed.set(true);
             if (parent != null) {
                 core.switchActivity(this, parent);
                 parent.onResume(null);
@@ -100,6 +103,11 @@ public abstract class Activity implements InputHandler {
 
     protected final void closeActivity(@Nullable Bundle result) {
         checkThread();
+
+        if (!closed.compareAndSet(false, true)) {
+            logger.warn("Activity tries to close itself more than once!");
+            return;
+        }
 
         onPause();
         if (parent != null) {

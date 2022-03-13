@@ -55,7 +55,7 @@ public abstract class AbstractValueSelector extends PageActivity {
             valuesList[i] = new TextView(values[i] == null ? "null" : values[i], optionStyle);
             addWidget(valuesList[i]).pos().setGravity(Gravity.centerTop).setOffsetY(offset += 2);
         }
-        valuesList[current].setPattern(selectedStyle);
+        valuesList[current].setStyle(selectedStyle);
         render();
     }
 
@@ -83,16 +83,16 @@ public abstract class AbstractValueSelector extends PageActivity {
 
     private void goUp() {
         if (current == 0) return;
-        valuesList[current].setPattern(optionStyle);
+        valuesList[current].setStyle(optionStyle);
         current--;
-        valuesList[current].setPattern(selectedStyle);
+        valuesList[current].setStyle(selectedStyle);
     }
 
     private void goDown() {
         if (current == valuesList.length - 1) return;
-        valuesList[current].setPattern(optionStyle);
+        valuesList[current].setStyle(optionStyle);
         current++;
-        valuesList[current].setPattern(selectedStyle);
+        valuesList[current].setStyle(selectedStyle);
     }
 
     protected void setHint(String text) {

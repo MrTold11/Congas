@@ -4,6 +4,7 @@ import ru.congas.core.CongasCore;
 import ru.congas.core.application.Activity;
 import ru.congas.core.application.GameActivity;
 import ru.congas.core.application.PageActivity;
+import ru.congas.core.pages.ErrorActivity;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +43,7 @@ public class AppsJarLoader extends AppsLoader {
         try {
             Manifest mf = jar.getManifest();
             Attributes attr = mf.getMainAttributes();
-            String className = attr.getValue("Congas-Main");
+            String className = attr.getValue("Applications");
             for (String n : className.split(";")) {
                 Class<?> appClass = loadClass(n);
 
@@ -105,8 +106,10 @@ public class AppsJarLoader extends AppsLoader {
      * @return true if it's not application
      */
     protected boolean rejectClass(Class<?> c) {
-        return c.getSuperclass() == null || Modifier.isAbstract(c.getModifiers()) || (!c.getSuperclass().equals(Activity.class)
-                && !c.getSuperclass().equals(PageActivity.class) && !c.getSuperclass().equals(GameActivity.class));
+        return c.getSuperclass() == null || Modifier.isAbstract(c.getModifiers()) || (
+                !c.getSuperclass().equals(Activity.class)
+                && !c.getSuperclass().equals(PageActivity.class) && !c.getSuperclass().equals(GameActivity.class)
+                && !c.getSuperclass().equals(ErrorActivity.class));
     }
 
     /**

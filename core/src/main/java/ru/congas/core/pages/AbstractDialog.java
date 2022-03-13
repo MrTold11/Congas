@@ -51,7 +51,7 @@ public abstract class AbstractDialog extends PageActivity {
         addWidget(optionBtv)
                 .pos().setGravity(Gravity.center).setOffsetX(2 + optionA.length() / 2).setOffsetY(2);
         answer = optionAtv;
-        answer.setPattern(answerStyle);
+        answer.setStyle(answerStyle);
         if (bottom != null && bottom.length() > 0)
             addWidget(new TextView(bottom, null))
                     .pos().setGravity(Gravity.centerBottom);
@@ -82,9 +82,9 @@ public abstract class AbstractDialog extends PageActivity {
     }
 
     private void switchAnswer() {
-        answer.setPattern(null);
+        answer.setStyle(null);
         answer = answer == optionAtv ? optionBtv : optionAtv;
-        answer.setPattern(answerStyle);
+        answer.setStyle(answerStyle);
     }
 
     protected abstract void clickA();

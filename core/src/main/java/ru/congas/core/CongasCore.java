@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.jline.terminal.Size;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
+import org.jline.terminal.impl.jansi.win.JansiWinSysTerminal;
 import ru.congas.core.application.Activity;
 import ru.congas.core.application.Bundle;
 import ru.congas.core.input.InputHandler;
@@ -30,6 +31,7 @@ public class CongasCore {
     protected static RenderThread renderer = null;
     protected static Terminal terminal = null;
     protected static StorageManager storageManager = null;
+
     protected static volatile boolean run = true;
     protected static volatile boolean debug = true;
     protected static boolean sendReport = false;

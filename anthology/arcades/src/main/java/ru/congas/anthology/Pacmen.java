@@ -1,23 +1,13 @@
 package ru.congas.anthology;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Pacmen extends Settings {
 
-    List<int[]> mass = new ArrayList<>();
-
     public Pacmen(){
-        this.x = 2;
+        this.x = 1;
         this.y = 1;
-        this.mx = 1;
-        this.lives = 5;
-        killHunter = false;
-    }
+        this.mx = 0;
 
-    public void isDead() {
-        this.isDead = true;
-        this.isVisible = false;
+        this.lives = 5;
     }
 
     public int getX(){
@@ -25,12 +15,6 @@ public class Pacmen extends Settings {
     }
     public int getY(){
         return this.y;
-    }
-
-    public void Boost(){
-        if (field[this.y][this.x] == '·'){
-            mass.add(new int[] {this.x,this.y});
-        }
     }
 
     public void setMx(int mx) {
@@ -44,7 +28,7 @@ public class Pacmen extends Settings {
     }
 
     public void move(char[][] field) {
-        if (check(field)){
+        if (check(field)) {
             this.y += this.my;
             this.x += this.mx;
         }
@@ -53,7 +37,7 @@ public class Pacmen extends Settings {
     //new
     public boolean check(char[][] field) {
 
-        if (field[this.my + this.y][this.x + this.mx] != ' ' && field[this.my + this.y][this.x + this.mx] !='·'){
+        if (field[this.my + this.y][this.x + this.mx] != ' ' && field[this.my + this.y][this.x + this.mx] != '·' && field[this.my + this.y][this.x + this.mx] != '.'){
             this.mx = 0;
             this.my = 0;
             return false;

@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 Main-Class: ru.congas.core.CongasCore
 Congas-Launcher: ru.congas.CongasClient
-Congas-Main: ru.congas.pages.testApps.TestAppCrash;ru.congas.pages.testApps.TestCriticalCrash;ru.congas.pages.testApps.TestInputOutput;ru.congas.pages.testApps.TestPictureOutput
+Applications: ru.congas.pages.testApps.TestAppCrash;ru.congas.pages.testApps.TestCriticalCrash;ru.congas.pages.testApps.TestInputOutput;ru.congas.pages.testApps.TestPictureOutput
 

@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * @author Mr_Told
  */
-public class UiThread extends PauseThread {
+public class UiThread extends SuspendedThread {
 
     private final Activity activity;
 
@@ -25,7 +25,8 @@ public class UiThread extends PauseThread {
     @Override
     protected void handleException(Exception e) {
         activity.getLogger().error("Fatal error in " + activity.getName() + " application: ", e);
-        activity.exceptionClose();
+        if (!pause && run)
+            activity.exceptionClose();
     }
 
     @Override

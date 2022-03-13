@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-public class Hunter extends Settings{
+public class Hunter extends Settings {
 
     public Hunter(){
         this.x = 9;

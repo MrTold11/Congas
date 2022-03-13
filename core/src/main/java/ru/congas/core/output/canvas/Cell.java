@@ -99,13 +99,19 @@ public class Cell extends Style {
         //As we use EnumSet, it iterates in order in which attributes declared into enum
         //so RESET operation will be the first
         EnumSet<Attribute> deltaAttr = deltaAttr(previous.attributes, attributes, rst);
-        boolean updFg = needUpdate(fg, previous.fg);
-        boolean updBg = needUpdate(bg, previous.bg);
+        if (deltaAttr != null) deltaAttr.remove(Attribute.RESET);
+        boolean updFg = needUpdate(fg, previous.fg) || (rst && fg != null);
+        boolean updBg = needUpdate(bg, previous.bg) || (rst && bg != null);
 
         if (updBg || updFg || deltaAttr != null || rst) {
             target.append(FIRST_ESC_CHAR).append(SECOND_ESC_CHAR);
             if (rst)
                 target.append("0;");
+
+            if (deltaAttr != null) {
+                for (Attribute attribute : deltaAttr)
+                    target.append(attribute.getValue()).append(SEPARATOR);
+            }
 
             if (updBg) {
                 target.append("48;");
@@ -115,11 +121,6 @@ public class Cell extends Style {
             if (updFg) {
                 target.append("38;");
                 appendColor(target, fg);
-            }
-
-            if (deltaAttr != null) {
-                for (Attribute attribute : deltaAttr)
-                    target.append(attribute.getValue()).append(SEPARATOR);
             }
 
             target.setLength(Math.max(target.length() - 1, 0));

@@ -3,12 +3,12 @@ package ru.congas.core.application;
 /**
  * @author Mr_Told
  */
-public abstract class PauseThread extends Thread {
+public abstract class SuspendedThread extends Thread {
 
     protected volatile boolean run = true;
     protected volatile boolean pause = false;
 
-    public PauseThread(String name) {
+    public SuspendedThread(String name) {
         super(name);
     }
 
@@ -24,7 +24,8 @@ public abstract class PauseThread extends Thread {
                     }
                 }
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             handleException(e);
         }
     }

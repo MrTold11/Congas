@@ -20,7 +20,7 @@ public class ScreenBuffer {
     private volatile boolean liveUpdate = false;
     //todo partial update
 
-    private volatile int fps = 60;
+    private volatile int fps = 20;
     private volatile int loopTime = 1000 / fps;
     private int terminalWidth, terminalHeight;
 
